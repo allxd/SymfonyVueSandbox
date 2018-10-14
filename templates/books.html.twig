@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Книги автора {{author.secondname}}</h1>
+	{% if books %}
+		<table id="books" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Название</th>
+					<th>Год</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for book in books %}
+				<tr>
+					<td>{{book.name}}</td>
+					<td>{{book.year}}</td>
+					<td>
+					<a href="#" class="btn btn-danger delete-book" data-id="{{ book.id }}">Удалить</a>
+					<a href="/author/{{ author.id }}/edit/{{ book.id }}" class="btn btn-warning">Изменить</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<hr>
+	{% else %}
+		<p>Nothing here</p>
+	{% endif %}
+	<a href="/author/{{author.id}}/new" class="btn btn-primary">Добавить книгу</a></td>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="/js/main.js"></script>
+{% endblock %}
