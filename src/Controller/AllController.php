@@ -6,21 +6,48 @@ namespace App\Controller;
 
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\HttpFoundation\Request;
+	use Symfony\Component\HttpFoundation\JsonResponse;
 	use Symfony\Component\Routing\Annotation\Route;
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 	use Symfony\Component\Form\Extension\Core\Type\TextType;
 	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-	class AllController extends Controller{
+	class AllController extends Controller {
+
 		/**
 		*@Route("/", name="home")
 		*@Method({"GET"})
 		*/
-
 		public function index() {
 			$authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
-			return $this->render('index.html.twig', array('authors' => $authors));
+			//return $this->render('index.html.twig', array('authors' => $authors));
+			$authorsArr = array();
+			foreach ($authors as $author) {
+				$authorsArr[] = $author->toArr();
+			}
+			$response = new Response();
+			$response->setContent(json_encode($authorsArr));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			//return $response;
+			return $this->render('base.html.twig');
+		}
+
+		/**
+		*@Route("/authors", name="getA")
+		*@Method({"GET"})
+		*/
+		public function getAuthors() {
+			$authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
+			//return $this->render('index.html.twig', array('authors' => $authors));
+			$authorsArr = array();
+			foreach ($authors as $author) {
+				$authorsArr[] = $author->toArr();
+			}
+			$response = new Response();
+			$response->setContent(json_encode($authorsArr));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
 		}
 
 		/**
@@ -127,10 +154,10 @@ namespace App\Controller;
     	}
 
 
-		 /**
-	     * @Route("/book/delete/{id}")
-	     * @Method({"DELETE"})
-	     */
+		/**
+	    * @Route("/book/delete/{id}")
+	    * @Method({"DELETE"})
+	    */
 	    public function delete(Request $request, $id) {
 	    	$book = $this->getDoctrine()->getRepository(Book::class)->find($id);
 	    	$entityManager = $this->getDoctrine()->getManager();
@@ -149,6 +176,18 @@ namespace App\Controller;
 
 			$author = $this->getDoctrine()->getRepository(Author::class)->find($idA);
 
-			return $this->render('books.html.twig', array('books' => $books, 'author' => $author));
+			$booksArr = array();
+			foreach ($books as $book) {
+				$booksArr[] = $book->toArr();
+			}
+
+			$booksArr[] = $author->toArr();
+
+			$response = new Response();
+			$response->setContent(json_encode($booksArr));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
+			//return $this->render('books.html.twig', array('books' => $books, 'author' => $author));
+
 		}
 	}

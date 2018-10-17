@@ -46,4 +46,13 @@ class Author
     public function setSecondname($secondname) {
         $this->secondname = $secondname;
     }
+
+    public function toArr() {
+        $res = array(
+            'id' => $this->getId(),
+            'firstname' => $this->getFirstname(),
+            'secondname' => $this->getSecondname()
+        );
+        return $res;
+    }
 }

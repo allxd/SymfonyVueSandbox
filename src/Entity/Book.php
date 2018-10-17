@@ -59,4 +59,14 @@ class Book
      public function getYear() {
         return $this->year;
     }
+
+    public function toArr() {
+        $res = array(
+            'id' => $this->getId(),
+            'authorid' => $this->getAuthorid(),
+            'name' => $this->getName(),
+            'year' => $this->getYear()
+        );
+        return $res;
+    }
 }

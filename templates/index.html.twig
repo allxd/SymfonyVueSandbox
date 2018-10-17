@@ -1,29 +1,5 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	{% if authors %}
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Имя</th>
-					<th>Фамилия</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for author in authors %}
-				<tr>
-					<td>{{author.firstname}}</td>
-					<td>{{author.secondname}}</td>
-					<td>
-						<a href="/author/{{author.id}}" class="btn btn-info">Список книг</a>
-						<a href="/edit/{{author.id}}" class="btn btn-warning">Редактировать автора</a>
-					</td>
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	{% else %}
-		<p>Nothing here</p>
-	{% endif %}
-	<a href="/new" class="btn btn-primary">Добавить автора</a></td>
+	<Authors></Authors>
 {% endblock %}

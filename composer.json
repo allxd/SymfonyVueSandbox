@@ -14,11 +14,14 @@
         "symfony/maker-bundle": "^1.8",
         "symfony/orm-pack": "^1.0",
         "symfony/phpunit-bridge": "*",
+        "symfony/serializer": "*",
         "symfony/twig-bundle": "*",
+        "symfony/webpack-encore-pack": "^1.0",
         "symfony/yaml": "*"
     },
     "require-dev": {
-        "symfony/dotenv": "*"
+        "symfony/dotenv": "*",
+        "symfony/web-server-bundle": "*"
     },
     "config": {
         "preferred-install": {
