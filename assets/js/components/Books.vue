@@ -18,12 +18,12 @@
           <td> {{ book.year }} </td>
           <td>
             <button class="btn btn-danger mr-3" @click="deleteBook(book.id)">Удалить</button>
-            <router-link :to="{ name: 'editB', params: { idA: author.id, idB: book.id }}" class="btn btn-warning mr-3">Редактировать книгу</router-link>
+            <router-link :to="{ name: 'editBook', params: { idA: author.id, idB: book.id }}" class="btn btn-warning mr-3">Редактировать книгу</router-link>
           </td>
         </tr>
       </tbody>
     </table>
-    <router-link to="/new" class="btn btn-primary mr-3">Добавить книгу</router-link>
+    <router-link :to="{ name: 'addBook', params: { idA: author.id }}" class="btn btn-primary mr-3">Добавить книгу</router-link>
   </div>
 </template>
 
@@ -44,11 +44,11 @@ export default {
       this.author = a.pop();
       this.books = a;
     },
-    /*deleteBook(idB) {
+    deleteBook(idB) {
       axios.delete('http://localhost:8000/book/delete/' + idB)
       
       window.location.reload();
-    }*/
+    }
   },
   async created () {
     try {

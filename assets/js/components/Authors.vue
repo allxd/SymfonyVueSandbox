@@ -18,12 +18,12 @@
           <td> {{ author.secondname }} </td>
           <td>
             <router-link :to="{ name: 'books', params: { idA: author.id }}" class="btn btn-info mr-3">Список книг</router-link>
-            <router-link :to="{ name: 'editA', params: { idA: author.id }}" class="btn btn-warning mr-3">Редактировать автора</router-link>
+            <router-link :to="{ name: 'editAuthor', params: { idA: author.id }}" class="btn btn-warning mr-3">Редактировать автора</router-link>
           </td>
         </tr>
       </tbody>
     </table>
-    <!--<router-link to="/new" class="btn btn-primary mr-3">Добавить автора</router-link>-->
+    <router-link :to="{ name: 'addAuthor' }" class="btn btn-primary mr-3">Добавить автора</router-link>
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a href="/" class="nav-link">Авторы</a>
+          <a href="/" class="nav-link">Home</a>
         </li>
       </ul>
     </nav>
