@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <h1>AddAuthor</h1>
-    
+    <h1>Добавить нового автора</h1>
+    	<label for="firstname">Имя</label>
+    	<input type="text" name="firstname" v-model="author.firstname">
+    	<label for="secondname">Фамилия</label>
+    	<input type="text" name="secondname" v-model="author.secondname">
+    	<hr>
+    	<button @click="createA">Добавить</button>
   </div>
 </template>
 
@@ -9,16 +14,35 @@
 import axios from 'axios'
 
 export default {
-  name: 'Editform',
-  props:['secondname', 'authorname', 'firstname', 'year'],
+  name: 'Addnewa',
   data() {
-  	return {}
-  	},
-  methods: {},
+  	return {
+  		author: {
+  			firstname: '',
+  			secondname: ''
+  		}
+  	}
+  },
+  methods: {
+  	createA: function() {
+  		if(this.author.firstname == '' || this.author.secondname == '') {
+  			alert('123');
+  		}
+  		else {
+  			const data = JSON.stringify(this.author);
+  			axios.post('http://localhost:8000/new', data)
+  			.then((response) => {
+  				this.$router.push({ path: 'index' });
+  			})
+  			.catch((err) => {
+  				console.log(err);
+  			});
+  		}
+  	}
+  },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
 </style>

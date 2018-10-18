@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Список книг</h1>
+    <h1>Список авторов</h1>
     <table class="table table-striped">
       <thead>
         <tr>

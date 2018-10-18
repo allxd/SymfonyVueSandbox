@@ -1,5 +1,5 @@
 
-const books = document.getElementById('books');
+/*const books = document.getElementById('books');
 
 if (books) {
   books.addEventListener('click', e => {
@@ -10,4 +10,4 @@ if (books) {
       }).then(res => window.location.reload());
     }
   });
-}
+}*/

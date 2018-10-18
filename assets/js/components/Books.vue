@@ -23,7 +23,7 @@
         </tr>
       </tbody>
     </table>
-    <router-link :to="{ name: 'addBook', params: { idA: author.id }}" class="btn btn-primary mr-3">Добавить книгу</router-link>
+    <router-link :to="{ name: 'addBook', params: { idA: idA }}" class="btn btn-primary mr-3">Добавить книгу</router-link>
   </div>
 </template>
 
@@ -46,8 +46,7 @@ export default {
     },
     deleteBook(idB) {
       axios.delete('http://localhost:8000/book/delete/' + idB)
-      
-      window.location.reload();
+      this.$router.push({ name: 'books', params: { idA: this.idA} });
     }
   },
   async created () {
@@ -56,7 +55,7 @@ export default {
       this.dataParse(response.data);
     }
     catch(err) {
-      alert(err);
+      console.log(err);
     }
   }
 }

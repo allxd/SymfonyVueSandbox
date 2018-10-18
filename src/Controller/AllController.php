@@ -20,18 +20,31 @@ namespace App\Controller;
 		*@Method({"GET"})
 		*/
 		public function index() {
-			$authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
-			//return $this->render('index.html.twig', array('authors' => $authors));
-			$authorsArr = array();
-			foreach ($authors as $author) {
-				$authorsArr[] = $author->toArr();
-			}
-			$response = new Response();
-			$response->setContent(json_encode($authorsArr));
-			$response->headers->set('Access-Control-Allow-Origin', '*');
-			//return $response;
 			return $this->render('base.html.twig');
 		}
+
+		/**
+		*@Route("/search", name="search")
+		*@Method({"GET", "POST"})
+		*/
+		public function search(Request $request) {
+			$searchParams = $request->getContent();
+			$repository = $this->getDoctrine()->getRepository(Author::class);
+    		$author = $repository->findOneBy([
+    			'firstname' => $searchParams[0]]);
+			$response = new Response();
+			/*if($author) {
+				$result = $author->toArr();
+				$response->setContent(json_encode($result));
+			}
+			else {
+				$response->setContent('nothing found');
+			}*/
+			$response->setContent(json_encode($searchParams));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
+		}
+
 
 		/**
 		*@Route("/authors", name="getA")
@@ -39,7 +52,6 @@ namespace App\Controller;
 		*/
 		public function getAuthors() {
 			$authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
-			//return $this->render('index.html.twig', array('authors' => $authors));
 			$authorsArr = array();
 			foreach ($authors as $author) {
 				$authorsArr[] = $author->toArr();
@@ -56,25 +68,17 @@ namespace App\Controller;
 		*/
 		public function newA(Request $request) {
 			$author = new Author();
+			$authorData = json_decode($request->getContent(), true);
 
-			$form = $this->createFormbuilder($author)->
-				add('firstname', TextType::class, array('attr' => array('class' => 'form-control')))
-				->add('secondname', TextType::class, array('attr' => array('class' => 'form-control')))
-				->add('save', SubmitType::class, array('label'=>'Создать', 'attr'=> array('class' =>'btn btn-success mt-3')))
-				->getForm();
+			$author->setFirstname($authorData['firstname']);
+			$author->setSecondname($authorData['secondname']);
+			$entityManager =  $this->getDoctrine()->getManager();
+        	$entityManager->persist($author);
+        	$entityManager->flush();
 
-			$form->handleRequest($request);
-
-			if($form->isSubmitted() && $form->isValid()) {
-				$author = $form->getData();
-				$entityManager =  $this->getDoctrine()->getManager();
-        		$entityManager->persist($author);
-        		$entityManager->flush();
-
-        		return $this->redirectToRoute('home');
-			}
-
-			return $this->render('new.html.twig', array('form' => $form->createView()));
+			$response = new Response();
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
 		}
 
 		/**
@@ -83,26 +87,18 @@ namespace App\Controller;
 		*/
 		public function newB(Request $request, $idA) {
 			$book = new Book();
+			$bookData = json_decode($request->getContent(), true);
 
-			$form = $this->createFormbuilder($book)->
-				add('name', TextType::class, array('attr' => array('class' => 'form-control')))
-				->add('year', TextType::class, array('attr' => array('class' => 'form-control')))
-				->add('save', SubmitType::class, array('label'=>'Создать', 'attr'=> array('class' =>'btn btn-success mt-3')))
-				->getForm();
+			$book->setName($bookData['name']);
+			$book->setYear($bookData['year']);
+			$book->setAuthorid($idA);
+			$entityManager =  $this->getDoctrine()->getManager();
+        	$entityManager->persist($book);
+        	$entityManager->flush();
 
-			$form->handleRequest($request);
-
-			if($form->isSubmitted() && $form->isValid()) {
-				$book = $form->getData();
-				$book->setAuthorid($idA);
-				$entityManager =  $this->getDoctrine()->getManager();
-        		$entityManager->persist($book);
-        		$entityManager->flush();
-
-        		return $this->redirectToRoute('authorBooks', ['idA'=>$idA]);
-			}
-
-			return $this->render('new.html.twig', array('form' => $form->createView()));
+			$response = new Response();
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
 		}
 
 		/**
@@ -112,21 +108,17 @@ namespace App\Controller;
     	public function editA(Request $request, $idA) {
     		$author = new Author();
     		$author = $this->getDoctrine()->getRepository(Author::class)->find($idA);
-    		$form = $this->createFormBuilder($author)
-	    		->add('firstname', TextType::class, array('attr' => array('class' => 'form-control')))
-	    		->add('secondname', TextType::class, array('attr' => array('class' => 'form-control')))
-	    		->add('save', SubmitType::class, array('label' => 'Изменить', 'attr' => array('class' => 'btn btn-success mt-3')))
-	    		->getForm();
-
-    		$form->handleRequest($request);
-
-    		if($form->isSubmitted() && $form->isValid()) {
-    			$entityManager = $this->getDoctrine()->getManager();
+    		if($author) {
+    			$newData = json_decode($request->getContent(), true);
+    			$author->setFirstname($newData['firstname']);
+				$author->setSecondname($newData['secondname']);
+				$entityManager = $this->getDoctrine()->getManager();
     			$entityManager->flush();
-
-    			return $this->redirectToRoute('home');
     		}
-    		return $this->render('edit.html.twig', array('form' => $form->createView()));
+
+    		$response = new Response();
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
     	}
 
     	/**
@@ -136,21 +128,17 @@ namespace App\Controller;
     	public function editB(Request $request, $idB, $idA) {
     		$book = new Book();
     		$book = $this->getDoctrine()->getRepository(Book::class)->find($idB);
-    		$form = $this->createFormBuilder($book)
-	    		->add('name', TextType::class, array('attr' => array('class' => 'form-control')))
-	    		->add('year', TextType::class, array('attr' => array('class' => 'form-control')))
-	    		->add('save', SubmitType::class, array('label' => 'Изменить', 'attr' => array('class' => 'btn btn-success mt-3')))
-	    		->getForm();
-
-    		$form->handleRequest($request);
-
-    		if($form->isSubmitted() && $form->isValid()) {
-    			$entityManager = $this->getDoctrine()->getManager();
+    		if($book) {
+    			$newData = json_decode($request->getContent(), true);
+    			$book->setName($newData['name']);
+				$book->setYear($newData['year']);
+				$entityManager = $this->getDoctrine()->getManager();
     			$entityManager->flush();
-
-    			return $this->redirectToRoute('authorBooks', ['idA'=>$idA]);
     		}
-    		return $this->render('edit.html.twig', array('form' => $form->createView()));
+
+    		$response = new Response();
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
     	}
 
 
@@ -164,9 +152,39 @@ namespace App\Controller;
 	    	$entityManager->remove($book);
 	    	$entityManager->flush();
 	    	$response = new Response();
+	    	$response->headers->set('Access-Control-Allow-Origin', '*');
 	    	$response->send();
 	    }
 
+		/**
+		*@Route("/book/{idB}/formdata", name="forEditB")
+		*@Method({"GET"})
+		*/
+		public function getFormdataB(Request $request, $idB) {
+			$book = new Book();
+    		$book = $this->getDoctrine()->getRepository(Book::class)->find($idB);
+    		$res = array();
+    		$res[] = $book->toArr();
+    		$response = new Response();
+			$response->setContent(json_encode($res));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
+		}
+
+		/**
+		*@Route("/author/{idA}/formdata", name="forEditA")
+		*@Method({"GET"})
+		*/
+		public function getFormdataA(Request $request, $idA) {
+			$author = new Author();
+    		$author = $this->getDoctrine()->getRepository(Author::class)->find($idA);
+    		$res = array();
+    		$res[] = $author->toArr();
+    		$response = new Response();
+			$response->setContent(json_encode($res));
+			$response->headers->set('Access-Control-Allow-Origin', '*');
+			return $response;
+		}
 
 		/**
 		*@Route("/author/{idA}", name="authorBooks")
@@ -187,7 +205,5 @@ namespace App\Controller;
 			$response->setContent(json_encode($booksArr));
 			$response->headers->set('Access-Control-Allow-Origin', '*');
 			return $response;
-			//return $this->render('books.html.twig', array('books' => $books, 'author' => $author));
-
 		}
 	}
