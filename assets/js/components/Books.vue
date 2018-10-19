@@ -45,13 +45,19 @@ export default {
       this.books = a;
     },
     deleteBook(idB) {
-      axios.delete('http://localhost:8000/book/delete/' + idB)
-      this.$router.push({ name: 'books', params: { idA: this.idA} });
+      axios.delete('http://localhost:8000/api/book/delete/' + idB)
+      window.location.reload()
+      /*.then((response) => {
+        this.$router.push({ name: 'books', params: { idA: this.idA} });
+      })
+      .catch((err) => {
+        console.log(err);
+      });*/
     }
   },
   async created () {
     try {
-      const response = await axios.get('http://localhost:8000/author/' + this.idA)
+      const response = await axios.get('http://localhost:8000/api/author/' + this.idA)
       this.dataParse(response.data);
     }
     catch(err) {

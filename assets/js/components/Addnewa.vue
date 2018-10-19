@@ -1,12 +1,16 @@
 <template>
   <div class="container">
     <h1>Добавить нового автора</h1>
-    	<label for="firstname">Имя</label>
-    	<input type="text" name="firstname" v-model="author.firstname">
-    	<label for="secondname">Фамилия</label>
-    	<input type="text" name="secondname" v-model="author.secondname">
-    	<hr>
-    	<button @click="createA">Добавить</button>
+    <div class="form-group">
+    	<label class="col-form-label" for="firstname">Имя</label>
+    	<input class="form-control" type="text" name="firstname" v-model="author.firstname">
+    </div>
+    <div class="form-group">
+      <label class="col-form-label" for="secondname">Фамилия</label>
+    	<input class="form-control" type="text" name="secondname" v-model="author.secondname">
+    </div>
+      <hr>
+    	<button class="btn btn-success" @click="createA">Добавить</button>
   </div>
 </template>
 
@@ -29,8 +33,9 @@ export default {
   			alert('123');
   		}
   		else {
+        this.format();
   			const data = JSON.stringify(this.author);
-  			axios.post('http://localhost:8000/new', data)
+  			axios.post('http://localhost:8000/api/new', data)
   			.then((response) => {
   				this.$router.push({ path: 'index' });
   			})
@@ -38,7 +43,12 @@ export default {
   				console.log(err);
   			});
   		}
-  	}
+  	},
+    format: function() {
+      for(let key in this.author) {
+        this.author[key] = this.author[key].replace(/\s/g, '');
+      }
+    }
   },
 }
 </script>

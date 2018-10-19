@@ -2,13 +2,17 @@
   <div class="container">
   	<h1>Редактировать книгу</h1>
   	<div v-if="dataloaded">
-		<label for="name">Название</label>
-		<input type="text" name="name"  v-model="book[0].name">
-		<label for="year">Год</label>
-		<input type="text" name="year" v-model="book[0].year">
-	</div>
+      <div class="form-group">
+		    <label  class="col-form-label" for="name">Название</label>
+		    <input class="form-control" type="text" name="name"  v-model="book[0].name">
+      </div>
+      <div class="form-group">
+		    <label  class="col-form-label" for="year">Год</label>
+		    <input class="form-control" type="text" name="year" v-model="book[0].year">
+      </div>
+    </div>
     <hr>
-    <button @click="edit">Изменить</button>
+    <button class="btn btn-success" @click="edit">Изменить</button>
 
   </div>
 </template>
@@ -27,7 +31,7 @@ export default {
   }, 
   	async created () {
   		try {
-  			const response = await axios.get('http://localhost:8000/book/' + this.idB + '/formdata')
+  			const response = await axios.get('http://localhost:8000/api/book/' + this.idB + '/formdata')
   			this.book = response.data;
   			this.dataloaded = true;
   		}
@@ -42,7 +46,7 @@ export default {
   		}
   		else {
   			const data = JSON.stringify(this.book[0]);
-  			axios.post('http://localhost:8000/author/'+ this.idA + '/edit/' + this.idB, data)
+  			axios.post('http://localhost:8000/api/author/'+ this.idA + '/edit/' + this.idB, data)
   			.then((response) => {
   				this.$router.push({ name: 'books', params: { idA: this.idA} });
   			})

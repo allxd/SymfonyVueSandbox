@@ -28,26 +28,25 @@ namespace App\Controller;
 		*@Method({"GET", "POST"})
 		*/
 		public function search(Request $request) {
-			$searchParams = $request->getContent();
+			$searchParams = json_decode($request->getContent());
 			$repository = $this->getDoctrine()->getRepository(Author::class);
     		$author = $repository->findOneBy([
-    			'firstname' => $searchParams[0]]);
+    			'secondname' => $searchParams[0]]);
 			$response = new Response();
-			/*if($author) {
-				$result = $author->toArr();
+			if($author) {
+				$result = $author->getId();
 				$response->setContent(json_encode($result));
 			}
 			else {
 				$response->setContent('nothing found');
-			}*/
-			$response->setContent(json_encode($searchParams));
+			}
 			$response->headers->set('Access-Control-Allow-Origin', '*');
 			return $response;
 		}
 
 
 		/**
-		*@Route("/authors", name="getA")
+		*@Route("/api/authors", name="getA")
 		*@Method({"GET"})
 		*/
 		public function getAuthors() {
@@ -63,7 +62,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/new")
+		*@Route("/api/new")
 		*Method({"GET", "POST"})
 		*/
 		public function newA(Request $request) {
@@ -82,7 +81,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/author/{idA}/new")
+		*@Route("/api/author/{idA}/new")
 		*Method({"GET", "POST"})
 		*/
 		public function newB(Request $request, $idA) {
@@ -102,7 +101,7 @@ namespace App\Controller;
 		}
 
 		/**
-     	* @Route("/edit/{idA}", name="editAuthor")
+     	* @Route("/api/edit/{idA}", name="editAuthor")
      	* Method({"GET", "POST"})
      	*/
     	public function editA(Request $request, $idA) {
@@ -122,7 +121,7 @@ namespace App\Controller;
     	}
 
     	/**
-     	* @Route("/author/{idA}/edit/{idB}", name="editBook")
+     	* @Route("/api/author/{idA}/edit/{idB}", name="editBook")
      	* Method({"GET", "POST"})
      	*/
     	public function editB(Request $request, $idB, $idA) {
@@ -143,21 +142,25 @@ namespace App\Controller;
 
 
 		/**
-	    * @Route("/book/delete/{id}")
+	    * @Route("/api/book/delete/{id}")
 	    * @Method({"DELETE"})
 	    */
 	    public function delete(Request $request, $id) {
 	    	$book = $this->getDoctrine()->getRepository(Book::class)->find($id);
-	    	$entityManager = $this->getDoctrine()->getManager();
-	    	$entityManager->remove($book);
-	    	$entityManager->flush();
+	    	if($book) {
+	    		$entityManager = $this->getDoctrine()->getManager();
+	    		$entityManager->remove($book);
+	    		$entityManager->flush();
+	    	}
 	    	$response = new Response();
 	    	$response->headers->set('Access-Control-Allow-Origin', '*');
-	    	$response->send();
+			$response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+
+	    	return $response;
 	    }
 
 		/**
-		*@Route("/book/{idB}/formdata", name="forEditB")
+		*@Route("/api/book/{idB}/formdata", name="forEditB")
 		*@Method({"GET"})
 		*/
 		public function getFormdataB(Request $request, $idB) {
@@ -172,7 +175,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/author/{idA}/formdata", name="forEditA")
+		*@Route("/api/author/{idA}/formdata", name="forEditA")
 		*@Method({"GET"})
 		*/
 		public function getFormdataA(Request $request, $idA) {
@@ -187,7 +190,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/author/{idA}", name="authorBooks")
+		*@Route("/api/author/{idA}", name="authorBooks")
 		*/
 		public function books($idA) {
 			$books = $this->getDoctrine()->getRepository(Book::class)->findBy(['authorid'=>$idA]);

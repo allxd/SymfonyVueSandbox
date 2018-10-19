@@ -6,10 +6,10 @@
           <a href="/" class="nav-link">На главную</a>
         </li>
       </ul>
-      <input class="form-control mr-sm-2" type="text" placeholder="Поиск" v-model="serachOption">
+      <input class="form-control mr-sm-2" type="text" placeholder="Фамилия автора..." v-model="serachOption" @keyup.enter="search">
       <button class="btn btn-secondary my-2 my-sm-0" @click="search">Искать</button>
     </nav>
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
@@ -34,14 +34,20 @@ export default {
       if(this.searchQuery.length < 1) {
         alert('Nothing to search');
       }
-      else if(this.searchQuery.length > 2) {
+      else if(this.searchQuery.length > 1) {
         alert('too much params')
       }
       else {
         axios.post('http://localhost:8000/search', JSON.stringify(this.searchQuery))
         .then((response) => {
-          console.log(response);
-          //this.$router.push({ name: 'books', params: { idA: this.idA} });
+          this.serachOption = '';
+          if(response.data == 'nothing found') {
+            alert('nothing found');
+          }
+          else {
+            this.$router.push({ name: 'books', params: { idA: response.data} });
+            //window.location.reload();
+          }
         })
         .catch((err) => {
           console.log(err);

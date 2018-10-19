@@ -2,13 +2,17 @@
   <div class="container">
   	<h1>Редактировать автора</h1>
   	<div v-if="dataloaded">
-		<label for="firstname">Имя</label>
-		<input type="text" name="firstname"  v-model="author[0].firstname">
-		<label for="secondname">Фамилия</label>
-		<input type="text" name="secondname" v-model="author[0].secondname">
-	</div>
+      <div class="form-group">
+		    <label class="col-form-label" for="firstname">Имя</label>
+		    <input class="form-control" type="text" name="firstname"  v-model="author[0].firstname">
+		  </div>
+      <div class="form-group">
+        <label class="col-form-label" for="secondname">Фамилия</label>
+		    <input class="form-control" type="text" name="secondname" v-model="author[0].secondname">
+      </div>
+    </div>
     <hr>
-    <button @click="edit">Изменить</button>
+    <button class="btn btn-success" @click="edit">Изменить</button>
 
   </div>
 </template>
@@ -27,7 +31,7 @@ export default {
   }, 
   	async created () {
   		try {
-  			const response = await axios.get('http://localhost:8000/author/' + this.idA + '/formdata')
+  			const response = await axios.get('http://localhost:8000/api/author/' + this.idA + '/formdata')
   			this.author = response.data;
   			this.dataloaded = true;
   		}
@@ -41,8 +45,9 @@ export default {
   			alert('invalid data');
   		}
   		else {
+        this.format();
   			const data = JSON.stringify(this.author[0]);
-  			axios.post('http://localhost:8000/edit/'+ this.idA, data)
+  			axios.post('http://localhost:8000/api/edit/'+ this.idA, data)
   			.then((response) => {
   				this.$router.push({ name: 'index' });
   				//console.log(response);
@@ -51,12 +56,16 @@ export default {
   				console.log(err);
   			});
   		}
-  	}
+  	},
+    format: function() {
+      for(let key in this.author[0]) {
+        this.author[0][key] = this.author[0][key].toString().replace(/\s/g, '');
+      }
+    }
   },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
 </style>
