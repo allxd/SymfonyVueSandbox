@@ -39,7 +39,7 @@ export default {
   },
   async created () {
     try {
-      const response = await axios.get('http://localhost:8000/api/authors')
+      const response = await axios.get('http://localhost:8000/api/authorslist')
       this.authors = response.data;
     }
     catch(err) {

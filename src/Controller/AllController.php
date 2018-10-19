@@ -13,6 +13,8 @@ namespace App\Controller;
 	use Symfony\Component\Form\Extension\Core\Type\TextType;
 	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
+	//use App\Service\SearchFunctions;
+
 	class AllController extends Controller {
 
 		/**
@@ -28,7 +30,10 @@ namespace App\Controller;
 		*@Method({"GET", "POST"})
 		*/
 		public function search(Request $request) {
+			$response = new Response();
 			$searchParams = json_decode($request->getContent());
+			/*$searchResult = $searchFunctions->searchAuthor('SecondName1');
+			$response->setContent($searchFunctions->searchAuthor('SecondName1'));*/
 			$repository = $this->getDoctrine()->getRepository(Author::class);
     		$author = $repository->findOneBy([
     			'secondname' => $searchParams[0]]);
@@ -46,10 +51,10 @@ namespace App\Controller;
 
 
 		/**
-		*@Route("/api/authors", name="getA")
+		*@Route("/api/authorslist", name="getAllAuthors")
 		*@Method({"GET"})
 		*/
-		public function getAuthors() {
+		public function getAllAuthors() {
 			$authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
 			$authorsArr = array();
 			foreach ($authors as $author) {
