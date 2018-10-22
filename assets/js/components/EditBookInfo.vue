@@ -1,65 +1,83 @@
 <template>
   <div class="container">
-  	<h1>Редактировать книгу</h1>
-  	<div v-if="dataloaded">
+    <h1>Редактировать книгу</h1>
+    <div v-if="dataLoaded">
       <div class="form-group">
-		    <label  class="col-form-label" for="name">Название</label>
-		    <input class="form-control" type="text" name="name"  v-model="book[0].name">
+        <label class="col-form-label" for="name">Название</label>
+        <input class="form-control" type="text" name="name" v-model="book.name">
+        <div class="error" v-if="!$v.book.name.required">Необходимо заполнить</div>
       </div>
       <div class="form-group">
-		    <label  class="col-form-label" for="year">Год</label>
-		    <input class="form-control" type="text" name="year" v-model="book[0].year">
+        <label class="col-form-label" for="year">Год</label>
+        <input class="form-control" type="text" name="year" v-model="book.year">
+        <div class="error" v-if="!$v.book.year.required">Необходимо заполнить</div>
+        <div class="error" v-if="!$v.book.year.integer">Только цифры</div>
       </div>
     </div>
     <hr>
-    <button class="btn btn-success" @click="edit">Изменить</button>
-
+    <button class="btn btn-success" @click="editBook" :disabled="$v.$invalid">Изменить</button>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { required, integer } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'Editform',
+  name: 'EditAuthor',
   props:['idA', 'idB'],
   data() {
-  	return {
-  		book: [],
-  		dataloaded: false
-  	}
+    return {
+      book: {
+        name: '',
+        year: ''
+      },
+      dataLoaded: true
+    }
   }, 
-  	async created () {
-  		try {
-  			const response = await axios.get('http://localhost:8000/api/book/' + this.idB + '/formdata')
-  			this.book = response.data;
-  			this.dataloaded = true;
-  		}
-  		catch(err) {
-  			console.log(err);
-  		}
-  	},
-  methods: {
-  	edit: function() {
-  		if(this.book[0].name == '' || this.book[0].year == '') {
-  			alert('invalid data');
-  		}
-  		else {
-  			const data = JSON.stringify(this.book[0]);
-  			axios.post('http://localhost:8000/api/author/'+ this.idA + '/edit/' + this.idB, data)
-  			.then((response) => {
-  				this.$router.push({ name: 'books', params: { idA: this.idA} });
-  			})
-  			.catch((err) => {
-  				console.log(err);
-  			});
-  		}
-  	}
+  validations: {
+    book: {
+      name: {
+        required,
+      },
+      year: {
+        required,
+        integer
+      }
+    }
   },
+    async created () {
+      /*try {
+        const response = await axios.get('http://localhost:8000/api/author/' + this.idA + '/formdata')
+        this.author = response.data;
+        this.dataloaded = true;
+      }
+      catch(err) {
+        console.log(err);
+      }*/
+    },
+  methods: {
+    editBook: function() {
+      var req = this.formRequest();
+      console.log(req);
+      /*const data = JSON.stringify(this.author);
+      axios.post('http://localhost:8000/api/new', data)
+      .then((response) => {
+        this.$router.push({ path: 'index' });
+      })
+      .catch((err) => {
+        console.log(err);
+      });*/
+    },
+    formRequest: function() {
+      var request = {
+        "payload": [this.book]}
+        return request;
+    },
+  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
 </style>

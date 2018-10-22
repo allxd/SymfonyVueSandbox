@@ -38,7 +38,8 @@ export default {
         alert('too much params')
       }
       else {
-        axios.post('http://localhost:8000/search', JSON.stringify(this.searchQuery))
+        var req = this.formRequest();
+        axios.get('http://localhost:8000/search', req)
         .then((response) => {
           this.serachOption = '';
           if(response.data == 'nothing found') {
@@ -53,6 +54,11 @@ export default {
           console.log(err);
         });
       }
+    },
+    formRequest: function() {
+      var request = {
+        "payload": [this.searchQuery]}
+        return request;
     }
   }
 
