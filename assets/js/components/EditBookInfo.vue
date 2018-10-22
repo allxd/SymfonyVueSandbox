@@ -71,7 +71,7 @@ export default {
     },
     formRequest: function() {
       var request = {
-        "payload": [this.book]}
+        "payload": {"book": this.book}}
         return request;
     },
   }
