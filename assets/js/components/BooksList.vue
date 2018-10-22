@@ -45,7 +45,8 @@ export default {
       this.books = a;
     },
     deleteBook(idB) {
-      axios.delete('http://localhost:8000/api/book/delete/' + idB)
+      var url = Routing.generate('deleteBook', { idB: this.idB });
+      axios.delete(url)
       window.location.reload()
       /*.then((response) => {
         this.$router.push({ name: 'books', params: { idA: this.idA} });
@@ -57,7 +58,8 @@ export default {
   },
   async created () {
     try {
-      const response = await axios.get('http://localhost:8000/api/author/' + this.idA)
+      var url = Routing.generate('booksList', { idA: this.idA });
+      const response = await axios.get(url);
       this.dataParse(response.data);
     }
     catch(err) {

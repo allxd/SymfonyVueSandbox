@@ -54,7 +54,8 @@ export default {
       var req = this.formRequest();
       console.log(req);
   		/*const data = JSON.stringify(this.author);
-  		axios.post('http://localhost:8000/api/new', data)
+      var url = Routing.generate('createAuthor');
+  		axios.post(url, data)
   		.then((response) => {
   			this.$router.push({ path: 'index' });
   		})

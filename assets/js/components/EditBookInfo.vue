@@ -32,7 +32,7 @@ export default {
         name: '',
         year: ''
       },
-      dataLoaded: true
+      dataLoaded: false
     }
   }, 
   validations: {
@@ -47,21 +47,24 @@ export default {
     }
   },
     async created () {
-      /*try {
-        const response = await axios.get('http://localhost:8000/api/author/' + this.idA + '/formdata')
-        this.author = response.data;
-        this.dataloaded = true;
+      try {
+        var url = Routing.generate('formdataBook', { idB: this.idB });
+        const response = await axios.get(url);
+        console.log(response);
+        /*this.author = response.data;
+        this.dataloaded = true;*/
       }
       catch(err) {
         console.log(err);
-      }*/
+      }
     },
   methods: {
     editBook: function() {
       var req = this.formRequest();
       console.log(req);
       /*const data = JSON.stringify(this.author);
-      axios.post('http://localhost:8000/api/new', data)
+      var url = Routing.generate('editBook', { idA: this.idA, idB: this.idB });
+      axios.post(url, data)
       .then((response) => {
         this.$router.push({ path: 'index' });
       })

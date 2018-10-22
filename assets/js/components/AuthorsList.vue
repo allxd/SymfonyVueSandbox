@@ -39,7 +39,8 @@ export default {
   },
   async created () {
     try {
-      const response = await axios.get('http://localhost:8000/api/authorslist')
+      var url = Routing.generate('getAllAuthors');
+      const response = await axios.get(url);
       this.authors = response.data;
     }
     catch(err) {

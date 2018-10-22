@@ -17,7 +17,7 @@ export default new VueRouter({
         { path: '/new', name:'addAuthor', props: true, component: CreateAuthor },
         { path: '/author/:idA/new', name:'addBook', props: true, component: CreateBook },
         { path: '/edit/:idA', name:'editAuthor', props: true, component: EditAuthorInfo },
-        { path: '/author/:idA/edit/idB', name:'editBook', props: true, component: EditBookInfo },
+        { path: '/author/:idA/edit/:idB', name:'editBook', props: true, component: EditBookInfo },
         { path: '*', redirect: '/index' }
     ],
 });

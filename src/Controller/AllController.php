@@ -26,7 +26,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/search", name="search")
+		*@Route("/search", name="search", options={"expose" = true})
 		*@Method({"GET", "POST"})
 		*/
 		public function search(Request $request) {
@@ -51,7 +51,7 @@ namespace App\Controller;
 
 
 		/**
-		*@Route("/api/authorslist", name="getAllAuthors")
+		*@Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
 		*@Method({"GET"})
 		*/
 		public function getAllAuthors() {
@@ -67,7 +67,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/new")
+		*@Route("/api/new", name="createAuthor", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
 		public function newA(Request $request) {
@@ -86,7 +86,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/{idA}/new")
+		*@Route("/api/author/{idA}/new", name="createBook", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
 		public function newB(Request $request, $idA) {
@@ -106,7 +106,7 @@ namespace App\Controller;
 		}
 
 		/**
-     	* @Route("/api/edit/{idA}", name="editAuthor")
+     	* @Route("/api/edit/{idA}", name="editAuthor", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
     	public function editA(Request $request, $idA) {
@@ -126,7 +126,7 @@ namespace App\Controller;
     	}
 
     	/**
-     	* @Route("/api/author/{idA}/edit/{idB}", name="editBook")
+     	* @Route("/api/author/{idA}/edit/{idB}", name="editBook", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
     	public function editB(Request $request, $idB, $idA) {
@@ -147,7 +147,7 @@ namespace App\Controller;
 
 
 		/**
-	    * @Route("/api/book/delete/{id}")
+	    * @Route("/api/book/delete/{id}", name="deleteBook", options={"expose" = true})
 	    * @Method({"DELETE"})
 	    */
 	    public function delete(Request $request, $id) {
@@ -165,7 +165,7 @@ namespace App\Controller;
 	    }
 
 		/**
-		*@Route("/api/book/{idB}/formdata", name="forEditB")
+		*@Route("/api/book/{idB}/formdata", name="formdataBook", options={"expose" = true})
 		*@Method({"GET"})
 		*/
 		public function getFormdataB(Request $request, $idB) {
@@ -180,7 +180,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/{idA}/formdata", name="forEditA")
+		*@Route("/api/author/{idA}/formdata", name="formdataAuthor", options={"expose" = true})
 		*@Method({"GET"})
 		*/
 		public function getFormdataA(Request $request, $idA) {
@@ -195,7 +195,7 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/{idA}", name="authorBooks")
+		*@Route("/api/author/{idA}", name="booksList", options={"expose" = true})
 		*/
 		public function books($idA) {
 			$books = $this->getDoctrine()->getRepository(Book::class)->findBy(['authorid'=>$idA]);
