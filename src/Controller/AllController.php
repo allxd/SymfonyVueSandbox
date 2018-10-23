@@ -35,7 +35,6 @@ namespace App\Controller;
 			return $response;
 		}
 
-
 		/**
 		*@Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
 		*@Method({"GET"})
