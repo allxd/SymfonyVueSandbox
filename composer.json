@@ -6,6 +6,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
+        "ramsey/uuid": "^3.8",
+        "ramsey/uuid-doctrine": "^1.5",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/browser-kit": "*",
         "symfony/console": "*",

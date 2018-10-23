@@ -52,16 +52,14 @@ export default {
   methods: {
   	createAuthor: function() {
       var req = this.formRequest();
-      console.log(req);
-  		/*const data = JSON.stringify(this.author);
       var url = Routing.generate('createAuthor');
-  		axios.post(url, data)
+  		axios.post(url, req)
   		.then((response) => {
   			this.$router.push({ path: 'index' });
   		})
   		.catch((err) => {
   			console.log(err);
-  		});*/
+  		});
   	},
     formRequest: function() {
       var request = {

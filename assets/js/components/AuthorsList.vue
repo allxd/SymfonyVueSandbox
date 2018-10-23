@@ -38,13 +38,13 @@ export default {
     }
   },
   async created () {
-    try {
-      var url = Routing.generate('getAllAuthors');
-      const response = await axios.get(url);
-      this.authors = response.data;
+    var url = Routing.generate('getAllAuthors');
+    const response = await axios.get(url);
+    if(response.data.status === 0) {
+      this.authors = response.data.payload.authors;
     }
-    catch(err) {
-      console.log(err);
+    else {
+      console.log(response.data.error);
     }
   }
 }

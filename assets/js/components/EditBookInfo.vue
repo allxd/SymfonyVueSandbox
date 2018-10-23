@@ -47,30 +47,27 @@ export default {
     }
   },
     async created () {
-      try {
-        var url = Routing.generate('formdataBook', { idB: this.idB });
-        const response = await axios.get(url);
-        console.log(response);
-        /*this.author = response.data;
-        this.dataloaded = true;*/
+      var url = Routing.generate('formdataBook', { idB: this.idB });
+      const response = await axios.get(url);
+      if(response.data.status === 0) {
+        this.book = response.data.payload.book;
+        this.dataLoaded = true;
       }
-      catch(err) {
-        console.log(err);
+      else {
+        console.log(response.data.error);
       }
     },
   methods: {
     editBook: function() {
       var req = this.formRequest();
-      console.log(req);
-      /*const data = JSON.stringify(this.author);
       var url = Routing.generate('editBook', { idA: this.idA, idB: this.idB });
-      axios.post(url, data)
+      axios.post(url, req)
       .then((response) => {
-        this.$router.push({ path: 'index' });
+        this.$router.push({ name: 'books', params: { idA: this.idA }});
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
     },
     formRequest: function() {
       var request = {

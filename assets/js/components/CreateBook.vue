@@ -46,16 +46,14 @@ export default {
   methods: {
     createBook: function() {
       var req = this.formRequest();
-      console.log(req);
-      /*const data = JSON.stringify(this.author);
       var url = Routing.generate('createBook', { idA: this.idA });
-      axios.post(url, data);
+      axios.post(url, req)
       .then((response) => {
-        this.$router.push({ path: 'index' });
+        this.$router.push({ name: 'books', params: { idA: this.idA }});
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
     },
     formRequest: function() {
       var request = {

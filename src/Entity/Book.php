@@ -11,19 +11,13 @@ class Book
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
      */
     private $id;
 
-   /**
-     * @ORM\Column(type="integer")
-     */
-    private $authorid;
-
-
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -32,40 +26,59 @@ class Book
      */
     private $year;
 
-    public function getId() {
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="books")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
+    public function getId(): ?string
+    {
         return $this->id;
     }
 
-    public function getAuthorid() {
-        return $this->authorid;
-    }
-
-     public function getName() {
+    public function getName(): ?string
+    {
         return $this->name;
     }
 
-    public function setAuthorid($authorid) {
-        $this->authorid = $authorid;
-    }
-
-    public function setName($name) {
+    public function setName(string $name): self
+    {
         $this->name = $name;
+
+        return $this;
     }
 
-     public function setYear($year) {
-        $this->year = $year;
-    }
-
-     public function getYear() {
+    public function getYear(): ?int
+    {
         return $this->year;
+    }
+
+    public function setYear(int $year): self
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): self
+    {
+        $this->author = $author;
+
+        return $this;
     }
 
     public function toArr() {
         $res = array(
             'id' => $this->getId(),
-            'authorid' => $this->getAuthorid(),
             'name' => $this->getName(),
-            'year' => $this->getYear()
+            'year' => $this->getYear(),
+            'author' => $this->getAuthor()
         );
         return $res;
     }

@@ -53,30 +53,27 @@ export default {
     }
   },
   	async created () {
-  		try {
-        var url = Routing.generate('formdataAuthor', { idA: this.idA });
-  			const response = await axios.get(url);
-        console.log(response);
-  			/*this.author = response.data;
-  			this.dataloaded = true;*/
-  		}
-  		catch(err) {
-  			console.log(err);
-  		}
+      var url = Routing.generate('formdataAuthor', { idA: this.idA });
+  		const response = await axios.get(url);
+      if(response.data.status === 0) {
+        this.author = response.data.payload.author;
+        this.dataLoaded = true;
+      }
+      else {
+        console.log(response.data.error);
+      }
   	},
   methods: {
     editAuthor: function() {
       var req = this.formRequest();
-      console.log(req);
-      /*const data = JSON.stringify(this.author);
       var url = Routing.generate('editAuthor', { idA: this.idA });
-      axios.post(url, data);
+      axios.post(url, req)
       .then((response) => {
-        this.$router.push({ path: 'index' });
+        this.$router.push({ name: 'index' });
       })
       .catch((err) => {
         console.log(err);
-      });*/
+      });
     },
     formRequest: function() {
       var request = {

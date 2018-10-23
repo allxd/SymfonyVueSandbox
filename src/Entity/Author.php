@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,40 +13,58 @@ class Author
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="guid")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
-
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
     private $secondname;
 
-    public function getId() {
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Book", mappedBy="author", orphanRemoval=true)
+     */
+    private $books;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
+
+    public function getId(): ?string
+    {
         return $this->id;
     }
 
-    public function getFirstname() {
+    public function getFirstname(): ?string
+    {
         return $this->firstname;
     }
 
-     public function getSecondname() {
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getSecondname(): ?string
+    {
         return $this->secondname;
     }
 
-    public function setFirstname($firstname) {
-        $this->firstname = $firstname;
-    }
-
-    public function setSecondname($secondname) {
+    public function setSecondname(string $secondname): self
+    {
         $this->secondname = $secondname;
+
+        return $this;
     }
 
     public function toArr() {
@@ -54,5 +74,36 @@ class Author
             'secondname' => $this->getSecondname()
         );
         return $res;
+    }
+
+    /**
+     * @return Collection|Book[]
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): self
+    {
+        if (!$this->books->contains($book)) {
+            $this->books[] = $book;
+            $book->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): self
+    {
+        if ($this->books->contains($book)) {
+            $this->books->removeElement($book);
+            // set the owning side to null (unless already changed)
+            if ($book->getAuthor() === $this) {
+                $book->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 }

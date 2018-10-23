@@ -40,12 +40,8 @@ export default {
     }
   },
   methods: {
-    dataParse(a) {
-      this.author = a.pop();
-      this.books = a;
-    },
     deleteBook(idB) {
-      var url = Routing.generate('deleteBook', { idB: this.idB });
+      var url = Routing.generate('deleteBook', { idB: idB });
       axios.delete(url)
       window.location.reload()
       /*.then((response) => {
@@ -57,13 +53,14 @@ export default {
     }
   },
   async created () {
-    try {
-      var url = Routing.generate('booksList', { idA: this.idA });
-      const response = await axios.get(url);
-      this.dataParse(response.data);
+    var url = Routing.generate('booksList', { idA: this.idA });
+    const response = await axios.get(url);
+    if(response.data.status === 0) {
+      this.author = response.data.payload.author;
+      this.books = response.data.payload.books;
     }
-    catch(err) {
-      console.log(err);
+    else {
+      console.log(response.data.error);
     }
   }
 }

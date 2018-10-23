@@ -38,26 +38,23 @@ export default {
         alert('too much params')
       }
       else {
+        var url = Routing.generate('search');
         var req = this.formRequest();
-        axios.get('http://localhost:8000/search', req)
+        axios.post(url, req)
         .then((response) => {
           this.serachOption = '';
-          if(response.data == 'nothing found') {
-            alert('nothing found');
+          if(response.data.status === 0) {
+            this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
           }
           else {
-            this.$router.push({ name: 'books', params: { idA: response.data} });
-            //window.location.reload();
+            console.log(response.data.error);
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
       }
     },
     formRequest: function() {
       var request = {
-        "payload": [this.searchQuery]}
+        'payload': { 'secondname': this.searchQuery}}
         return request;
     }
   }
