@@ -30,7 +30,6 @@ namespace App\Controller;
 		*@Method({"GET", "POST"})
 		*/
 		public function search(DataBaseOperations $databaseOperations, Request $request) {
-			$searchParams = json_decode($request->getContent(), true);
 			$response = new JsonResponse();
 			$response->setData($databaseOperations->searchByAuthorName($request));
 			return $response;
