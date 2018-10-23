@@ -24,37 +24,24 @@ export default {
       serachOption: ''
     }
   },
-  computed: {
-    searchQuery: function() {
-      return this.serachOption.split(' ');
-    }
-  },
   methods: {
     search: function() {
-      if(this.searchQuery.length < 1) {
-        alert('Nothing to search');
-      }
-      else if(this.searchQuery.length > 1) {
-        alert('too much params')
-      }
-      else {
-        var url = Routing.generate('search');
-        var req = this.formRequest();
-        axios.post(url, req)
-        .then((response) => {
-          this.serachOption = '';
-          if(response.data.status === 0) {
-            this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
-          }
-          else {
-            console.log(response.data.error);
-          }
-        });
-      }
+      var url = Routing.generate('search');
+      var req = this.formRequest();
+      axios.post(url, req)
+      .then((response) => {
+        this.serachOption = '';
+        if(response.data.status === 0) {
+           this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
+         }
+        else {
+          console.log(response.data.error);
+        }
+      });
     },
     formRequest: function() {
       var request = {
-        'payload': { 'secondname': this.searchQuery}}
+        'payload': { 'secondname': this.serachOption}}
         return request;
     }
   }
