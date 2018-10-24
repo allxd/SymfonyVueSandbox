@@ -44,11 +44,12 @@ namespace App\Controller;
 		public function getAllAuthorsAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes) {
 			$response = new JsonResponse();
 			try {
-				$response->setData($successRes->createResponse('authors', $databaseOperations->getAllAuthors()));
+				$resData = $databaseOperations->getAllAuthors();
 			}
-			catch(AppException $e) {
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
 			}
-
+			$response->setData($successRes->createResponse('authors', $resData));
 			return $response;
 		}
 
@@ -76,9 +77,15 @@ namespace App\Controller;
      	* @Route("/api/edit/{idA}", name="editAuthor", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
-    	public function editAuthorAction(DataBaseOperations $databaseOperations, Request $request, $idA) {
+    	public function editAuthorAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request, $idA) {
     		$response = new JsonResponse();
-			$response->setData($databaseOperations->editAuthor($request, $idA));
+    		try {
+    			$databaseOperations->editAuthor($request, $idA);
+    		}
+    		catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse());
 			return $response;
     	}
 
@@ -86,9 +93,15 @@ namespace App\Controller;
      	* @Route("/api/author/{idA}/edit/{idB}", name="editBook", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
-    	public function editBookAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request, $idB, $idA) {
+    	public function editBookAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request, $idB) {
     		$response = new JsonResponse();
-			$response->setData($successRes->createResponse('bookDTO', $databaseOperations->editBook($request, $idB)));
+    		try {
+    			$databaseOperations->editBook($request, $idB);
+    		}
+    		catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse());
 			return $response;
     	}
 
@@ -99,7 +112,13 @@ namespace App\Controller;
 	    */
 	    public function deleteBookAction(DataBaseOperations $databaseOperations, $id) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->deleteBook($id));
+			try {
+				$databaseOperations->deleteBook($id);
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse());
 			return $response;
 	    }
 
@@ -109,7 +128,13 @@ namespace App\Controller;
 		*/
 		public function getBookFormdataAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, $idB) {
 			$response = new JsonResponse();
-			$response->setData($successRes->createResponse('book', $databaseOperations->getFormDataBook($idB)));
+			try {
+				$resData = $databaseOperations->getFormDataBook($idB);
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse('book', $resData));
 			return $response;
 		}
 
@@ -117,9 +142,15 @@ namespace App\Controller;
 		*@Route("/api/author/{idA}/formdata", name="formdataAuthor", options={"expose" = true})
 		*@Method({"GET"})
 		*/
-		public function getAuthorFormdataAction(DataBaseOperations $databaseOperations, $idA) {
+		public function getAuthorFormdataAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, $idA) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->getFormDataAuthor($idA));
+			try {
+				$resData = $databaseOperations->getFormDataAuthor($idA);
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse('author', $resData));
 			return $response;
 		}
 
@@ -128,7 +159,13 @@ namespace App\Controller;
 		*/
 		public function getBooksByAuthorAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, $idA) {
 			$response = new JsonResponse();
-			$response->setData($successRes->createResponse('author', $databaseOperations->getBooks($idA)));
+			try {
+				$resData = $databaseOperations->getBooks($idA);
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			$response->setData($successRes->createResponse('author', $resData));
 			return $response;
 		}
 	}

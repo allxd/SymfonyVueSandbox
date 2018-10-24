@@ -7,15 +7,19 @@
 	use Doctrine\ORM\EntityManagerInterface;
 	use Doctrine\Common\Persistence\ObjectManager;
 	use Symfony\Component\HttpFoundation\Request;
+	use Symfony\Component\Validator\Validator\ValidatorInterface;
+	use Symfony\Component\Config\Definition\Exception\Exception;
 	use App\DTO\AuthorDTO;
 	use App\DTO\BookDTO;
 
 	class DataBaseOperations {
 		
 		private $objectManager;
+		private $validator;
 
-		public function __construct(ObjectManager $objectManager) {
+		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator) {
         	$this->objectManager = $objectManager;
+        	$this->validator = $validator;
         }
 
 		public function getAllAuthors() {
@@ -37,13 +41,11 @@
 				foreach ($author->getBooks() as $book) {
 	        		$booksDTO[] = new BookDTO($book);
 	        	}
-	        	/*$response = (object) [
-	        		'author'=> $authorDTO,
-	        		'books'=> $booksDTO ];*/
-	        	
 				return $authorDTO;
 			}
-			//return ;
+			else {
+				throw new \Exception('author not found');
+			}
 
 		}
 
@@ -83,9 +85,11 @@
 			$author = $authorRepository->find($id);
 			if($author) {
 				$authorDTO = new AuthorDTO($author);
-				return $this->createResponse('author', $authorDTO);
+				return $authorDTO;
 			}
-			return $this->createResponse('', [], 1, 'author not found');
+			else {
+				throw new \Exception('author not found');
+			}
 		}
 
 		public function getFormDataBook(string $id) {
@@ -95,34 +99,53 @@
 				$bookDTO = new BookDTO($book);
 				return $bookDTO;
 			}
-			return $this->createResponse('', [], 1, 'book not found');
+			else {
+				throw new \Exception('book not found');
+			}
 		}
 
 		public function editAuthor(Request $request, $id) {
-			/*$bookDTO = new BookDTO->create($request);
-			return $bookDTO;*/
-			/*$editAuthorData = json_decode($request->getContent(), true);
-			$authorRepository = $this->objectManager->getRepository(Author::class);
-			$author = $authorRepository->find($id);
-			$author->setFirstname($editAuthorData['payload']['author']['firstname']);
-			$author->setSecondname($editAuthorData['payload']['author']['secondname']);
-			$this->objectManager->flush();*/
-        	
-        	return $this->createResponse();
+			$authorDTO = new AuthorDTO;
+			$infoAuthorDTO = $authorDTO->create($request);
+			$errors = $this->validator->validate($infoAuthorDTO);
+			if(count($errors) === 0) {
+				$authorRepository = $this->objectManager->getRepository(Author::class);
+				$author = $authorRepository->find($id);
+				if($author) {
+					$author->setFirstname($infoAuthorDTO->{'firstname'});
+					$author->setSecondname($infoAuthorDTO->{'secondname'});
+					$this->objectManager->flush();
+					return;
+				}
+				else {
+					throw new \Exception('author not found');
+				}
+			}
+			else {
+				throw new \Exception((string)$errors);
+			}
 		}
 		
 		public function editBook(Request $request, $id) {
 			$bookDTO = new BookDTO;
 			$infoBookDTO = $bookDTO->create($request);
-			return $infoBookDTO;
-			/*$editBookData = json_decode($request->getContent(), true);
-			$bookRepository = $this->objectManager->getRepository(Book::class);
-			$book = $bookRepository->find($id);
-			$book->setName($editBookData['payload']['book']['name']);
-			$book->setYear($editBookData['payload']['book']['year']);
-			$this->objectManager->flush();*/
-        	
-        	//return ;
+			$errors = $this->validator->validate($infoBookDTO);
+			if(count($errors) === 0) {
+				$bookRepository = $this->objectManager->getRepository(Book::class);
+				$book = $bookRepository->find($id);
+				if($book) {
+					$book->setName($infoBookDTO->{'name'});
+					$book->setYear($infoBookDTO->{'year'});
+					$this->objectManager->flush();
+					return;
+				}
+				else {
+					throw new \Exception('book not found');
+				}
+			}
+			else {
+				throw new \Exception((string)$errors);
+			}
 		}
 
 		public function deleteBook($id) {
@@ -131,8 +154,11 @@
 			if($book) {
 				$this->objectManager->remove($book);
 				$this->objectManager->flush();
+				return;
 			}
-			return $this->createResponse();
+			else {
+				throw new \Exception('book not found');
+			}
 		}
 
 		public function searchByAuthorName(Request $request) {

@@ -19,6 +19,7 @@
         "symfony/phpunit-bridge": "*",
         "symfony/serializer": "*",
         "symfony/twig-bundle": "*",
+        "symfony/validator": "*",
         "symfony/webpack-encore-pack": "^1.0",
         "symfony/yaml": "*"
     },

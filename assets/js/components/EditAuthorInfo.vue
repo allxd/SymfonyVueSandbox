@@ -69,10 +69,12 @@ export default {
       var url = Routing.generate('editAuthor', { idA: this.idA });
       axios.post(url, req)
       .then((response) => {
-        this.$router.push({ name: 'index' });
-      })
-      .catch((err) => {
-        console.log(err);
+        if(response.data.status === 0) {
+          this.$router.push({ name: 'index'});
+        }
+        else {
+          console.log(response.data.error)
+        }
       });
     },
     formRequest: function() {

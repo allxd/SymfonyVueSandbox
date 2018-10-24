@@ -3,11 +3,21 @@
 
 	use App\Entity\Book;
 	use Symfony\Component\HttpFoundation\Request;
+	use Symfony\Component\Validator\Constraints as Assert;
 
 	class BookDTO {
-		
 		public $id;
+		/**
+     	* @Assert\NotBlank()
+     	*/
 		public $name;
+		/**
+     	* @Assert\NotBlank()
+     	* @Assert\Type(
+     	* 	type="integer",
+     	*   message="The value {{ value }} is not a valid {{ type }}."
+     	* )
+     	*/
 		public $year;
 
 		public function __construct(Book $book=null) {
