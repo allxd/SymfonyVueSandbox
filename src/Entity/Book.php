@@ -72,14 +72,4 @@ class Book
 
         return $this;
     }
-
-    public function toArr() {
-        $res = array(
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'year' => $this->getYear(),
-            'author' => $this->getAuthor()
-        );
-        return $res;
-    }
 }

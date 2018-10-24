@@ -2,6 +2,7 @@
 	namespace App\DTO;
 
 	use App\Entity\Book;
+	use Symfony\Component\HttpFoundation\Request;
 
 	class BookDTO {
 		
@@ -9,7 +10,7 @@
 		public $name;
 		public $year;
 
-		public function __construct(Book $book=NULL) {
+		public function __construct(Book $book=null) {
 			if($book) {
 	        	$this->id = $book->getId();
 	        	$this->name = $book->getName();
@@ -22,25 +23,14 @@
 	        }
         }
 
-        public function getID() {
-        	return $this->id;
-        }
+        public static function create(Request $request, string $key = "payload") {
+        	$content = $request->getContent();
+        	$params = json_decode($content, true);
+        	$model = new self();
+        	$model->name = $params['payload']['book']['name'];
+        	$model->year = $params['payload']['book']['year'];
 
-        public function getName() {
-        	return $this->name;
-        }
-
-        public function getYear() {
-        	return $this->year;
-        }
-
-        public function setName(string $name) {
-        	$this->name = $name;
-        	//return $this;
-        }
-
-        public function SetYear(string $year) {
-        	$this->year = $year;
+        	return $model;
         }
 
 	}

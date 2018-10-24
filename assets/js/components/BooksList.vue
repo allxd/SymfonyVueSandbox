@@ -40,8 +40,8 @@ export default {
     }
   },
   methods: {
-    deleteBook(idB) {
-      var url = Routing.generate('deleteBook', { idB: idB });
+    deleteBook(id) {
+      var url = Routing.generate('deleteBook', { id: id });
       axios.delete(url)
       window.location.reload()
       /*.then((response) => {
@@ -57,7 +57,7 @@ export default {
     const response = await axios.get(url);
     if(response.data.status === 0) {
       this.author = response.data.payload.author;
-      this.books = response.data.payload.books;
+      this.books = response.data.payload.author.books;
     }
     else {
       console.log(response.data.error);

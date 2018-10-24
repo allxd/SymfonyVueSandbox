@@ -63,7 +63,8 @@ export default {
       var url = Routing.generate('editBook', { idA: this.idA, idB: this.idB });
       axios.post(url, req)
       .then((response) => {
-        this.$router.push({ name: 'books', params: { idA: this.idA }});
+        console.log(response.data);
+        //this.$router.push({ name: 'books', params: { idA: this.idA }});
       })
       .catch((err) => {
         console.log(err);

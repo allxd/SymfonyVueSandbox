@@ -28,16 +28,17 @@ export default {
     search: function() {
       var url = Routing.generate('search');
       var req = this.formRequest();
-      axios.post(url, req)
-      .then((response) => {
-        this.serachOption = '';
-        if(response.data.status === 0) {
-           this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
-         }
-        else {
-          console.log(response.data.error);
-        }
-      });
+      axios.get(url, { params: {secondname: this.serachOption}})
+        .then((response) => {
+          this.serachOption = '';
+          if(response.data.status === 0) {
+            console.log(response.data.payload.author)
+            this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
+          }
+          else {
+            console.log(response.data.error)
+          }
+        });
     },
     formRequest: function() {
       var request = {

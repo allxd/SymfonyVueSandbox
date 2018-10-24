@@ -12,8 +12,10 @@ namespace App\Controller;
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 	use App\Service\DataBaseOperations;
-	use App\Utils\ResponseMaker;
-	use App\DTO\AuthorDTO;
+	use App\ExceptionHandler\AppException;
+	use App\Utils\JsonSuccessResponseModel;
+	use App\Utils\JsonErrorResponseModel;
+	//use App\ExceptionHandler\AppException;
 
 	class AllController extends Controller {
 
@@ -29,7 +31,7 @@ namespace App\Controller;
 		*@Route("/search", name="search", options={"expose" = true})
 		*@Method({"GET", "POST"})
 		*/
-		public function search(DataBaseOperations $databaseOperations, Request $request) {
+		public function searchByAuthorNameAction(DataBaseOperations $databaseOperations, Request $request) {
 			$response = new JsonResponse();
 			$response->setData($databaseOperations->searchByAuthorName($request));
 			return $response;
@@ -39,9 +41,14 @@ namespace App\Controller;
 		*@Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
 		*@Method({"GET"})
 		*/
-		public function getAllAuthors(DataBaseOperations $databaseOperations) {
+		public function getAllAuthorsAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->getAllAuthors());
+			try {
+				$response->setData($successRes->createResponse('authors', $databaseOperations->getAllAuthors()));
+			}
+			catch(AppException $e) {
+			}
+
 			return $response;
 		}
 
@@ -49,7 +56,7 @@ namespace App\Controller;
 		*@Route("/api/new", name="createAuthor", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
-		public function newA(DataBaseOperations $databaseOperations, Request $request) {
+		public function createAuthorAction(DataBaseOperations $databaseOperations, Request $request) {
 			$response = new JsonResponse();
 			$response->setData($databaseOperations->createNewAuthor($request));
 			return $response;
@@ -59,7 +66,7 @@ namespace App\Controller;
 		*@Route("/api/author/{idA}/new", name="createBook", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
-		public function newB(DataBaseOperations $databaseOperations, Request $request, $idA) {
+		public function createBookaction(DataBaseOperations $databaseOperations, Request $request, $idA) {
 			$response = new JsonResponse();
 			$response->setData($databaseOperations->createNewBook($request, $idA));
 			return $response;
@@ -69,7 +76,7 @@ namespace App\Controller;
      	* @Route("/api/edit/{idA}", name="editAuthor", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
-    	public function editA(DataBaseOperations $databaseOperations, Request $request, $idA) {
+    	public function editAuthorAction(DataBaseOperations $databaseOperations, Request $request, $idA) {
     		$response = new JsonResponse();
 			$response->setData($databaseOperations->editAuthor($request, $idA));
 			return $response;
@@ -79,20 +86,20 @@ namespace App\Controller;
      	* @Route("/api/author/{idA}/edit/{idB}", name="editBook", options={"expose" = true})
      	* Method({"GET", "POST"})
      	*/
-    	public function editB(DataBaseOperations $databaseOperations, Request $request, $idB, $idA) {
+    	public function editBookAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request, $idB, $idA) {
     		$response = new JsonResponse();
-			$response->setData($databaseOperations->editBook($request, $idB));
+			$response->setData($successRes->createResponse('bookDTO', $databaseOperations->editBook($request, $idB)));
 			return $response;
     	}
 
 
 		/**
-	    * @Route("/api/book/delete/{idB}", name="deleteBook", options={"expose" = true})
+	    * @Route("/api/book/delete/{id}", name="deleteBook", options={"expose" = true})
 	    * @Method({"DELETE"})
 	    */
-	    public function delete(DataBaseOperations $databaseOperations, $idB) {
+	    public function deleteBookAction(DataBaseOperations $databaseOperations, $id) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->deleteBook($idB));
+			$response->setData($databaseOperations->deleteBook($id));
 			return $response;
 	    }
 
@@ -100,9 +107,9 @@ namespace App\Controller;
 		*@Route("/api/book/{idB}/formdata", name="formdataBook", options={"expose" = true})
 		*@Method({"GET"})
 		*/
-		public function getFormdataB(DataBaseOperations $databaseOperations, $idB) {
+		public function getBookFormdataAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, $idB) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->getFormDataBook($idB));
+			$response->setData($successRes->createResponse('book', $databaseOperations->getFormDataBook($idB)));
 			return $response;
 		}
 
@@ -110,7 +117,7 @@ namespace App\Controller;
 		*@Route("/api/author/{idA}/formdata", name="formdataAuthor", options={"expose" = true})
 		*@Method({"GET"})
 		*/
-		public function getFormdataA(DataBaseOperations $databaseOperations, $idA) {
+		public function getAuthorFormdataAction(DataBaseOperations $databaseOperations, $idA) {
 			$response = new JsonResponse();
 			$response->setData($databaseOperations->getFormDataAuthor($idA));
 			return $response;
@@ -119,9 +126,9 @@ namespace App\Controller;
 		/**
 		*@Route("/api/author/{idA}", name="booksList", options={"expose" = true})
 		*/
-		public function books(DataBaseOperations $databaseOperations, $idA) {
+		public function getBooksByAuthorAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, $idA) {
 			$response = new JsonResponse();
-			$response->setData($databaseOperations->getBooks($idA));
+			$response->setData($successRes->createResponse('author', $databaseOperations->getBooks($idA)));
 			return $response;
 		}
 	}

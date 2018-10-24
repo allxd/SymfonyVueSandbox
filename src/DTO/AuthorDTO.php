@@ -9,45 +9,24 @@
 		public $id;
 		public $firstname;
 		public $secondname;
-		//public $books;
+		public $books;
 
-		public function __construct(Author $author=NULL) {
+		public function __construct(Author $author=null) {
 			if($author) {
 	        	$this->id = $author->getId();
 	        	$this->firstname = $author->getFirstname();
 	        	$this->secondname = $author->getSecondname();
-	        	//$this->books = [];
-	        	/*foreach ($author->getBooks() as $book) {
-	        		$this->books[] = ['id' => $book->getId(), 'name' => $book->getName(), 'year' => $book->getYear()];
-	        	}*/
+	        	$this->books = [];
+	        	foreach ($author->getBooks() as $book) {
+	        		$this->books[] = new BookDTO($book);
+	        	}
 	        }
 	        else {
 	        	$this->id = '';
 	        	$this->firstname = '';
 	        	$this->secondname = '';
-	        	//$this->books = [];
+	        	$this->books = [];
 	        }
-        }
-
-        public function getID() {
-        	return $this->id;
-        }
-
-        public function getfirstname() {
-        	return $this->firstname;
-        }
-
-        public function getSecondname() {
-        	return $this->secondname;
-        }
-
-        public function setfirstname(string $firstname) {
-        	$this->firstname = $firstname;
-        	//return $this;
-        }
-
-        public function setSecondname(string $secondname) {
-        	$this->secondname = $secondname;
         }
 
 	}

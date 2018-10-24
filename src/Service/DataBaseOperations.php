@@ -18,22 +18,6 @@
         	$this->objectManager = $objectManager;
         }
 
-		public function createResponse(string $name='', $data=[], int $status=0, string $err='') {
-			if($name != ''){
-	        	$response = (object) [ 
-	        		'status'=> $status,
-	        		'error'=> $err,
-	        		'payload'=> [$name=> $data]];
-	        }
-	        else {
-	        	$response = (object) [
-        			'status'=>$status,
-        			'error'=>$err, 
-        			'payload'=> $data];
-	        }
-	        return $response;
-    	}
-
 		public function getAllAuthors() {
 			$authorRepository = $this->objectManager->getRepository(Author::class);
 			$authors = $authorRepository->findAll();
@@ -41,7 +25,7 @@
 			foreach ($authors as $author) {
 				$authorsArr[] = new AuthorDTO($author);
 			}
-			return $this->createResponse('authors', $authorsArr);
+			return $authorsArr;
 		}
 
 		public function getBooks(string $id) {
@@ -53,13 +37,13 @@
 				foreach ($author->getBooks() as $book) {
 	        		$booksDTO[] = new BookDTO($book);
 	        	}
-	        	$response = (object) [
+	        	/*$response = (object) [
 	        		'author'=> $authorDTO,
-	        		'books'=> $booksDTO ];
+	        		'books'=> $booksDTO ];*/
 	        	
-				return $this->createResponse('', $response);
+				return $authorDTO;
 			}
-			return $tihs->createResponse('', [], 1, 'author not found');
+			//return ;
 
 		}
 
@@ -109,31 +93,36 @@
 			$book = $bookRepository->find($id);
 			if($book) {
 				$bookDTO = new BookDTO($book);
-				return $this->createResponse('book', $bookDTO);
+				return $bookDTO;
 			}
 			return $this->createResponse('', [], 1, 'book not found');
 		}
 
 		public function editAuthor(Request $request, $id) {
-			$editAuthorData = json_decode($request->getContent(), true);
+			/*$bookDTO = new BookDTO->create($request);
+			return $bookDTO;*/
+			/*$editAuthorData = json_decode($request->getContent(), true);
 			$authorRepository = $this->objectManager->getRepository(Author::class);
 			$author = $authorRepository->find($id);
 			$author->setFirstname($editAuthorData['payload']['author']['firstname']);
 			$author->setSecondname($editAuthorData['payload']['author']['secondname']);
-			$this->objectManager->flush();
+			$this->objectManager->flush();*/
         	
         	return $this->createResponse();
 		}
 		
 		public function editBook(Request $request, $id) {
-			$editBookData = json_decode($request->getContent(), true);
+			$bookDTO = new BookDTO;
+			$infoBookDTO = $bookDTO->create($request);
+			return $infoBookDTO;
+			/*$editBookData = json_decode($request->getContent(), true);
 			$bookRepository = $this->objectManager->getRepository(Book::class);
 			$book = $bookRepository->find($id);
 			$book->setName($editBookData['payload']['book']['name']);
 			$book->setYear($editBookData['payload']['book']['year']);
-			$this->objectManager->flush();
+			$this->objectManager->flush();*/
         	
-        	return $this->createResponse();
+        	//return ;
 		}
 
 		public function deleteBook($id) {
@@ -147,13 +136,13 @@
 		}
 
 		public function searchByAuthorName(Request $request) {
-			$searchParams = json_decode($request->getContent(), true);
+			$searchParams = $request->query->get('secondname');
 			$authorRepository = $this->objectManager->getRepository(Author::class);
 			$author = $authorRepository->findOneBy([
-    			'secondname' => $searchParams['payload']['secondname']]);
+    			'secondname' => $searchParams]);
 			if($author) {
 				$authorDTO = new AuthorDTO($author);
-				return $this->createResponse('author', $authorDTO);
+				//return $this->createResponse('author', $authorDTO);
 			}
 			return $this->createResponse('', $searchParams, 1, 'author not found');
 		}

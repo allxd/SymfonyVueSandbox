@@ -67,15 +67,6 @@ class Author
         return $this;
     }
 
-    public function toArr() {
-        $res = array(
-            'id' => $this->getId(),
-            'firstname' => $this->getFirstname(),
-            'secondname' => $this->getSecondname()
-        );
-        return $res;
-    }
-
     /**
      * @return Collection|Book[]
      */
