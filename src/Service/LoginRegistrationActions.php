@@ -10,6 +10,7 @@
 	use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 	use Symfony\Component\Config\Definition\Exception\Exception;
 	use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+	use Symfony\Component\Security\Core\Security;
 	use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 	use App\DTO\UserDTO;
 	use App\Security\LoginFormAuthenticator;
@@ -20,16 +21,14 @@
 		private $validator;
 		private $passwordEncoder;
 		private $guardHandler;
-		private $authenticator;
-		private $authenticationUtils;
+		private $security;
 
-		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, AuthenticationUtils $authenticationUtils) {
+		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, Security $security) {
         	$this->objectManager = $objectManager;
         	$this->validator = $validator;
         	$this->passwordEncoder = $passwordEncoder;
         	$this->guardHandler = $guardHandler;
-        	$this->authenticator = $authenticator;
-        	$this->authenticationUtils = $authenticationUtils;
+        	$this->security = $security;
         }
 
 		public function createNewUser(Request $request) {
@@ -43,19 +42,26 @@
 				$user->setPassword($password);
 				$this->objectManager->persist($user);
         		$this->objectManager->flush();
-        		 return $this->guardHandler->authenticateUserAndHandleSuccess(
+        		return;
+        		/*return $this->guardHandler->authenticateUserAndHandleSuccess(
             		$user,
             		$request,
             		$this->authenticator,
             		'main'
-            	);
+            	);*/
         	}
         	else {
         		throw new \Exception((string)$errors);
         	}
 		}
 
-		public function signIn(Request $request) {
+		public function signIn() {
+			$user = $this->security->getUser();
+			$userDTO = new UserDTO($user);
+			return $userDTO;
+		}
+
+		public function logOut() {
 			
 		}
 	}

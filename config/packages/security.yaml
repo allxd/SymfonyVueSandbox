@@ -24,8 +24,6 @@ security:
 
             logout:
                 path: /logout
-                target: home
-            switch_user: ~
 
             # activate different ways to authenticate
 

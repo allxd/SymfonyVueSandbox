@@ -83,14 +83,13 @@ namespace App\Controller;
 		*/
 		public function signInAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
 			$response = new JsonResponse();
-			/*try {
-				$loginRegistrationActions->createNewUser($request);
-    			$response->setData($successRes->createResponse());
+			try {
+				$loginRegistrationActions->signIn();
+    			$response->setData($successRes->createResponse('user', $loginRegistrationActions->signIn()));
 			}
 			catch(\Exception $e) {
     			$response->setData($errRes->createResponse($e->getMessage()));
-			}*/
-			$response->setData($successRes->createResponse());
+			}
 			return $response;
 		}
 
@@ -110,13 +109,13 @@ namespace App\Controller;
 		}
 
 		/**
-		*@IsGranted("ROLE_USER")
 		*@Route("/api/new", name="createAuthor", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
 		public function createAuthorAction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
     		$response = new JsonResponse();
     		try {
+    			$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
     			$databaseOperations->createNewAuthor($request);
     			$response->setData($successRes->createResponse());
     		}
@@ -127,13 +126,13 @@ namespace App\Controller;
 		}
 
 		/**
-		*@IsGranted("ROLE_USER")
 		*@Route("/api/author/{idA}/new", name="createBook", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
 		public function createBookaction(DataBaseOperations $databaseOperations, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request, $idA) {
     		$response = new JsonResponse();
     		try {
+    			$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
     			$databaseOperations->createNewBook($request, $idA);
 				$response->setData($successRes->createResponse());
     		}

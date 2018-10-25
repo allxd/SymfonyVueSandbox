@@ -49,7 +49,6 @@ export default {
       var url = Routing.generate('createBook', { idA: this.idA });
       axios.post(url, req)
       .then((response) => {
-        console.log(response.data)
         if(response.data.status === 0) {
           this.$router.push({ name: 'books', params: {idA: this.idA }});
         }
