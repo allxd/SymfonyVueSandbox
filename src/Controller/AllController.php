@@ -10,8 +10,11 @@ namespace App\Controller;
 	use Symfony\Component\Routing\Annotation\Route;
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+	use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 	use App\Service\DataBaseOperations;
+	use App\Service\LoginRegistrationActions;
 	use App\ExceptionHandler\AppException;
 	use App\Utils\JsonSuccessResponseModel;
 	use App\Utils\JsonErrorResponseModel;
@@ -43,6 +46,55 @@ namespace App\Controller;
 		}
 
 		/**
+		*@Route("/signup", name="signUp", options={"expose" = true})
+		*@Method({"GET", "POST"})
+		*/
+		public function signUpAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
+			$response = new JsonResponse();
+			try {
+				$loginRegistrationActions->createNewUser($request);
+    			$response->setData($successRes->createResponse());
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}
+			return $response;
+		}
+
+		/**
+		*@Route("/logout", name="logOut", options={"expose" = true})
+		*@Method({"GET", "POST"})
+		*/
+		public function logOutAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
+			$response = new JsonResponse();
+			/*try {
+				//$loginRegistrationActions->createNewUser($request);
+    			$response->setData($successRes->createResponse());
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}*/
+			return $response;
+		}
+
+		/**
+		*@Route("/login", name="logIn", options={"expose" = true})
+		*@Method({"GET", "POST"})
+		*/
+		public function signInAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
+			$response = new JsonResponse();
+			/*try {
+				$loginRegistrationActions->createNewUser($request);
+    			$response->setData($successRes->createResponse());
+			}
+			catch(\Exception $e) {
+    			$response->setData($errRes->createResponse($e->getMessage()));
+			}*/
+			$response->setData($successRes->createResponse());
+			return $response;
+		}
+
+		/**
 		*@Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
 		*@Method({"GET"})
 		*/
@@ -58,6 +110,7 @@ namespace App\Controller;
 		}
 
 		/**
+		*@IsGranted("ROLE_USER")
 		*@Route("/api/new", name="createAuthor", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/
@@ -74,6 +127,7 @@ namespace App\Controller;
 		}
 
 		/**
+		*@IsGranted("ROLE_USER")
 		*@Route("/api/author/{idA}/new", name="createBook", options={"expose" = true})
 		*Method({"GET", "POST"})
 		*/

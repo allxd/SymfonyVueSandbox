@@ -4,22 +4,27 @@
 
 	use App\Entity\Author;
 	use App\Entity\Book;
+	use App\Entity\User;
 	use Doctrine\ORM\EntityManagerInterface;
 	use Doctrine\Common\Persistence\ObjectManager;
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\Validator\Validator\ValidatorInterface;
+	use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 	use Symfony\Component\Config\Definition\Exception\Exception;
 	use App\DTO\AuthorDTO;
 	use App\DTO\BookDTO;
+	use App\DTO\UserDTO;
 
 	class DataBaseOperations {
 		
 		private $objectManager;
 		private $validator;
+		private $passwordEncoder;
 
-		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator) {
+		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder) {
         	$this->objectManager = $objectManager;
         	$this->validator = $validator;
+        	$this->passwordEncoder = $passwordEncoder;
         }
 
 		public function getAllAuthors() {
@@ -185,4 +190,22 @@
 				throw new \Exception('nothing found');
 			}
 		}
+
+		/*public function createNewUser(Request $request) {
+			$userDTO = new UserDTO;
+			$newUserDTO = $userDTO->create($request);
+			$errors = $this->validator->validate($newUserDTO);
+			if(count($errors) === 0) {
+				$user = new User();
+				$user->setEmail($newUserDTO->{'email'});
+				$password = $this->passwordEncoder->encodePassword($user, $newUserDTO->{'password'});
+				$user->setPassword($password);
+				$this->objectManager->persist($user);
+        		$this->objectManager->flush();
+        		return;
+        	}
+        	else {
+        		throw new \Exception((string)$errors);
+        	}
+		}*/
 	}

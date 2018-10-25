@@ -7,7 +7,10 @@
         </li>
       </ul>
       <input class="form-control mr-sm-2" type="text" placeholder="Фамилия автора..." v-model="serachOption" @keyup.enter="search">
-      <button class="btn btn-secondary my-2 my-sm-0" @click="search">Искать</button>
+      <button class="btn btn-secondary mr-3" @click="search">Искать</button>
+      <router-link :to="{ name: 'signUp' }" class="btn btn-secondary mr-1">Регистрация</router-link>
+      <router-link :to="{ name: 'logIn' }" class="btn btn-secondary mr-1">Вход</router-link>
+      <button class="btn btn-secondary mr-1" @click="logOut">Выход</button>
     </nav>
     <router-view :key="$route.fullPath"></router-view>
   </div>
@@ -38,6 +41,19 @@ export default {
           }
         });
     },
+    logOut: function() {
+      var url = Routing.generate('logOut');
+      axios.get(url)
+        .then((response) => {
+          this.$router.push({ name: 'logIn' });
+          /*if(response.data.status === 0) {
+            this.$router.push({ name: 'logIn' });
+          }
+          else {
+            console.log(response.data.error)
+          }*/
+        });
+    }
   }
 }
 </script>

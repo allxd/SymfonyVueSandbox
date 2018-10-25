@@ -17,6 +17,7 @@
         "symfony/maker-bundle": "^1.8",
         "symfony/orm-pack": "^1.0",
         "symfony/phpunit-bridge": "*",
+        "symfony/security-bundle": "*",
         "symfony/serializer": "*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
