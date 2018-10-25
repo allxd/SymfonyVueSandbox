@@ -19,6 +19,7 @@
 
 <script>
 import axios from 'axios'
+import { bus } from '../main';
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
@@ -49,6 +50,7 @@ export default {
       var url = Routing.generate('logIn');
       axios.post(url, req)
       .then((response) => {
+        //bus.$emit('logIn', response.data.payload.user);
         this.$router.push({ name: 'index'});
       });
     },

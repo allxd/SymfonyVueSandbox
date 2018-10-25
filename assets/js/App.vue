@@ -8,9 +8,9 @@
       </ul>
       <input class="form-control mr-sm-2" type="text" placeholder="Фамилия автора..." v-model="serachOption" @keyup.enter="search">
       <button class="btn btn-secondary mr-3" @click="search">Искать</button>
-      <router-link :to="{ name: 'signUp' }" class="btn btn-secondary mr-1">Регистрация</router-link>
-      <router-link :to="{ name: 'logIn' }" class="btn btn-secondary mr-1">Вход</router-link>
-      <button class="btn btn-secondary mr-1" @click="logOut">Выход</button>
+      <router-link :to="{ name: 'signUp' }" class="btn btn-success mr-1">Регистрация</router-link>
+      <router-link :to="{ name: 'logIn' }" class="btn btn-success mr-1">Вход</router-link>
+      <button class="btn btn-danger mr-1" @click="logOut" >Выход</button>
     </nav>
     <router-view :key="$route.fullPath"></router-view>
   </div>
@@ -18,13 +18,14 @@
 
 <script>
 import axios from 'axios'
+import { bus } from './main';
 
 export default {
   name: 'app',
 
   data() {
     return {
-      serachOption: ''
+      serachOption: '',
     }
   },
   methods: {
@@ -45,6 +46,7 @@ export default {
       var url = Routing.generate('logOut');
       axios.get(url)
         .then((response) => {
+          this.loggedInUser = {};
           this.$router.push({ name: 'logIn' });
           /*if(response.data.status === 0) {
             this.$router.push({ name: 'logIn' });
