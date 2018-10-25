@@ -13,10 +13,6 @@
 		public $name;
 		/**
      	* @Assert\NotBlank()
-     	* @Assert\Type(
-     	* 	type="integer",
-     	*   message="The value {{ value }} is not a valid {{ type }}."
-     	* )
      	*/
 		public $year;
 

@@ -50,34 +50,45 @@
 		}
 
 		public function createNewAuthor(Request $request) {
-			$newAuthorData = json_decode($request->getContent(), true);
-			/*$newAuthorDTO = new AuthorDTO();
-			$newAuthorDTO->setFirstname($newAuthorData['payload']['author']['firstname']);
-			$newAuthorDTO->setSecondname($newAuthorData['payload']['author']['secondname']);*/
-			$author = new Author();
-			$author->setFirstname($newAuthorData['payload']['author']['firstname']);
-			$author->setSecondname($newAuthorData['payload']['author']['secondname']);
-			$this->objectManager->persist($author);
-        	$this->objectManager->flush();
-
-        	return $this->createResponse();
+			$authorDTO = new AuthorDTO;
+			$newAuthorDTO = $authorDTO->create($request);
+			$errors = $this->validator->validate($newAuthorDTO);
+			if(count($errors) === 0) {
+				$author = new Author();
+				$author->setFirstname($newAuthorDTO->{'firstname'});
+				$author->setSecondname($newAuthorDTO->{'secondname'});
+				$this->objectManager->persist($author);
+        		$this->objectManager->flush();
+        		return;
+        	}
+        	else {
+        		throw new \Exception((string)$errors);
+        	}
 		}
 
 		public function createNewBook(Request $request, string $id) {
-			$newBookData = json_decode($request->getContent(), true);
-			$authorRepository = $this->objectManager->getRepository(Author::class);
-			$author = $authorRepository->find($id);
-			/*$newBookDTO = new BookDTO();
-			$newBookDTO->setName($newBookData['payload']['book']['name']);
-			$newBookDTO->setYear($newBookData['payload']['book']['year']);*/
-			$book = new Book();
-			$book->setName($newBookData['payload']['book']['name']);
-			$book->setYear($newBookData['payload']['book']['year']);
-			$book->setAuthor($author);
-			$this->objectManager->persist($book);
-        	$this->objectManager->flush();
-        	
-        	return $this->createResponse();
+			$bookDTO = new BookDTO;
+			$newBookDTO = $bookDTO->create($request);
+			$errors = $this->validator->validate($newBookDTO);
+			if(count($errors) === 0) {
+				$authorRepository = $this->objectManager->getRepository(Author::class);
+				$author = $authorRepository->find($id);
+				if($author) {
+					$book = new Book();
+					$book->setName($newBookDTO->{'name'});
+					$book->setYear($newBookDTO->{'year'});
+					$book->setAuthor($author);
+					$this->objectManager->persist($book);
+        			$this->objectManager->flush();
+        			return;
+				}
+				else {
+					throw new \Exception('author not found');
+				}
+			}
+			else {
+				throw new \Exception((string)$errors);
+			}
 		}
 
 		public function getFormDataAuthor(string $id) {
@@ -168,8 +179,10 @@
     			'secondname' => $searchParams]);
 			if($author) {
 				$authorDTO = new AuthorDTO($author);
-				//return $this->createResponse('author', $authorDTO);
+				return $authorDTO;
 			}
-			return $this->createResponse('', $searchParams, 1, 'author not found');
+			else {
+				throw new \Exception('nothing found');
+			}
 		}
 	}

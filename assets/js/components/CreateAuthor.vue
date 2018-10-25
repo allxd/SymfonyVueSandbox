@@ -55,11 +55,13 @@ export default {
       var url = Routing.generate('createAuthor');
   		axios.post(url, req)
   		.then((response) => {
-  			this.$router.push({ path: 'index' });
-  		})
-  		.catch((err) => {
-  			console.log(err);
-  		});
+        if(response.data.status === 0) {
+          this.$router.push({ name: 'index'});
+        }
+        else {
+          console.log(response.data.error)
+        }
+      });
   	},
     formRequest: function() {
       var request = {

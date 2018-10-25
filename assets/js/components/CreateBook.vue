@@ -49,10 +49,13 @@ export default {
       var url = Routing.generate('createBook', { idA: this.idA });
       axios.post(url, req)
       .then((response) => {
-        this.$router.push({ name: 'books', params: { idA: this.idA }});
-      })
-      .catch((err) => {
-        console.log(err);
+        console.log(response.data)
+        if(response.data.status === 0) {
+          this.$router.push({ name: 'books', params: {idA: this.idA }});
+        }
+        else {
+          console.log(response.data.error)
+        }
       });
     },
     formRequest: function() {

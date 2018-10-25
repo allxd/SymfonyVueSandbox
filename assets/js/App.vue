@@ -27,12 +27,10 @@ export default {
   methods: {
     search: function() {
       var url = Routing.generate('search');
-      var req = this.formRequest();
       axios.get(url, { params: {secondname: this.serachOption}})
         .then((response) => {
           this.serachOption = '';
           if(response.data.status === 0) {
-            console.log(response.data.payload.author)
             this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
           }
           else {
@@ -40,11 +38,6 @@ export default {
           }
         });
     },
-    formRequest: function() {
-      var request = {
-        'payload': { 'secondname': this.serachOption}}
-        return request;
-    }
   }
 }
 </script>
