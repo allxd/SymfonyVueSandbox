@@ -23,9 +23,9 @@
 	        	$this->year = $book->getYear();
 	        }
 	        else {
-	        	$this->id = '';
-	        	$this->name = '';
-	        	$this->year = '';
+	        	$this->id = null;
+	        	$this->name = null;
+	        	$this->year = null;
 	        }
         }
 

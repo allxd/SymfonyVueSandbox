@@ -32,9 +32,9 @@
 	        	}
 	        }
 	        else {
-	        	$this->id = '';
-	        	$this->email = '';
-	        	$this->password = '';
+	        	$this->id = null;
+	        	$this->email = null;
+	        	$this->password = null;
 	        	$this->roles = [];
 	        }
         }

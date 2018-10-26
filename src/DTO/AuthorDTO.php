@@ -41,9 +41,9 @@
 	        	}
 	        }
 	        else {
-	        	$this->id = '';
-	        	$this->firstname = '';
-	        	$this->secondname = '';
+	        	$this->id = null;
+	        	$this->firstname = null;
+	        	$this->secondname = null;
 	        	$this->books = [];
 	        }
         }
