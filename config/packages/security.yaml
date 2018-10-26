@@ -1,4 +1,5 @@
 security:
+
     encoders:
         App\Entity\User:
             algorithm: argon2i
@@ -16,7 +17,8 @@ security:
             security: false
         main:
             anonymous: true
-
+            access_denied_handler: App\Security\AccessDeniedHandler
+            
             json_login:
                 check_path: /login
                 username_path: payload.user.email
@@ -36,5 +38,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: /api, roles: ROLE_USER }
+         - { path: /api, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

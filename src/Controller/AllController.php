@@ -45,7 +45,6 @@ namespace App\Controller;
 		*/
 		public function getAllAuthorsAction(DataBaseOperations $databaseOperations) {
 			try {
-				//$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 				$payload = $databaseOperations->getAllAuthors();
 				$data = new JsonSuccessResponseModel($payload);
 			}
