@@ -19,12 +19,11 @@
 
 <script>
 import axios from 'axios'
-import { bus } from '../main';
+import FosJsRouting from '../FosJsRouting';
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'LogInForm',
-  props:['idA'],
   data() {
   	return {
       user: {
@@ -46,11 +45,8 @@ export default {
   },
   methods: {
     signIn: function() {
-      var req = this.formRequest();
-      var url = Routing.generate('logIn');
-      axios.post(url, req)
+      axios.post(FosJsRouting.generate('logIn'), this.formRequest())
       .then((response) => {
-        //bus.$emit('logIn', response.data.payload.user);
         this.$router.push({ name: 'index'});
       });
     },

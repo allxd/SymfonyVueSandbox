@@ -19,11 +19,11 @@
 
 <script>
 import axios from 'axios'
+import FosJsRouting from '../FosJsRouting';
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'RegistrationForm',
-  props:['idA'],
   data() {
   	return {
       user: {
@@ -45,9 +45,7 @@ export default {
   },
   methods: {
     signUp: function() {
-      var req = this.formRequest();
-      var url = Routing.generate('signUp');
-      axios.post(url, req)
+      axios.post(FosJsRouting.generate('signUp'), this.formRequest())
       .then((response) => {
         this.$router.push({ name: 'index'});
 

@@ -3,7 +3,6 @@ import App from './App';
 import router from './router/router';
 import Vuelidate from 'vuelidate'
 
-export const bus = new Vue();
 
 Vue.use(Vuelidate)
 

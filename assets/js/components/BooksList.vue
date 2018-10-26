@@ -18,21 +18,22 @@
           <td> {{ book.year }} </td>
           <td>
             <button class="btn btn-danger mr-3" @click="deleteBook(book.id)">Удалить</button>
-            <router-link :to="{ name: 'editBook', params: { idA: author.id, idB: book.id }}" class="btn btn-warning mr-3">Редактировать книгу</router-link>
+            <router-link :to="{ name: 'editBook', params: { authorId: author.id, bookId: book.id }}" class="btn btn-warning mr-3">Редактировать книгу</router-link>
           </td>
         </tr>
       </tbody>
     </table>
-    <router-link :to="{ name: 'addBook', params: { idA: idA }}" class="btn btn-primary mr-3">Добавить книгу</router-link>
+    <router-link :to="{ name: 'addBook', params: { authorId: authorId }}" class="btn btn-primary mr-3">Добавить книгу</router-link>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import FosJsRouting from '../FosJsRouting';
 
 export default {
   name: 'Books',
-  props:['idA'],
+  props:['authorId'],
   data() {
     return {
       books: [],
@@ -40,28 +41,32 @@ export default {
     }
   },
   methods: {
-    deleteBook(id) {
-      var url = Routing.generate('deleteBook', { id: id });
-      axios.delete(url)
-      window.location.reload()
-      /*.then((response) => {
-        this.$router.push({ name: 'books', params: { idA: this.idA} });
-      })
-      .catch((err) => {
-        console.log(err);
-      });*/
+    deleteBook: function(id) {
+      axios.delete(FosJsRouting.generate('deleteBook', { id: id }))
+      .then((response) => {
+        if(response.data.status === 0) {
+            this.loadBooks();
+          }
+          else {
+            console.log(response.data.message);
+          }
+      });
+    },
+    loadBooks: function() {
+      axios.get(FosJsRouting.generate('booksList', { id: this.authorId }))
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.author = response.data.payload;
+            this.books = response.data.payload.books;
+          }
+          else {
+            console.log(response.data.message);
+          }
+        });
     }
   },
   async created () {
-    var url = Routing.generate('booksList', { idA: this.idA });
-    const response = await axios.get(url);
-    if(response.data.status === 0) {
-      this.author = response.data.payload.author;
-      this.books = response.data.payload.author.books;
-    }
-    else {
-      console.log(response.data.error);
-    }
+    this.loadBooks();
   }
 }
 </script>

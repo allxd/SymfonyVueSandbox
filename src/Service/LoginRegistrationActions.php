@@ -32,33 +32,31 @@
         }
 
 		public function createNewUser(Request $request) {
-			$userDTO = new UserDTO;
-			$newUserDTO = $userDTO->create($request);
+			$newUserDTO = UserDTO::create($request);
 			$errors = $this->validator->validate($newUserDTO);
 			if(count($errors) === 0) {
 				$user = new User();
-				$user->setEmail($newUserDTO->{'email'});
-				$password = $this->passwordEncoder->encodePassword($user, $newUserDTO->{'password'});
+				$user->setEmail($newUserDTO->email);
+				$password = $this->passwordEncoder->encodePassword($user, $newUserDTO->password);
 				$user->setPassword($password);
 				$this->objectManager->persist($user);
         		$this->objectManager->flush();
         		return;
-        		/*return $this->guardHandler->authenticateUserAndHandleSuccess(
-            		$user,
-            		$request,
-            		$this->authenticator,
-            		'main'
-            	);*/
         	}
         	else {
-        		throw new \Exception((string)$errors);
+        		throw new AppException((string)$errors);
         	}
 		}
 
 		public function signIn() {
 			$user = $this->security->getUser();
-			$userDTO = new UserDTO($user);
-			return $userDTO;
+			if($user) {
+				$userDTO = new UserDTO($user);
+				return $userDTO;
+			}
+			else {
+				throw new \Exception('not logged in');
+			}
 		}
 
 		public function logOut() {

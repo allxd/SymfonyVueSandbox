@@ -18,7 +18,7 @@
 
 <script>
 import axios from 'axios'
-import { bus } from './main';
+import FosJsRouting from './FosJsRouting';
 
 export default {
   name: 'app',
@@ -30,29 +30,26 @@ export default {
   },
   methods: {
     search: function() {
-      var url = Routing.generate('search');
-      axios.get(url, { params: {secondname: this.serachOption}})
+      axios.get(FosJsRouting.generate('search'), { params: {secondname: this.serachOption}})
         .then((response) => {
           this.serachOption = '';
           if(response.data.status === 0) {
-            this.$router.push({ name: 'books', params: { idA: response.data.payload.author.id }});
+            this.$router.push({ name: 'books', params: { authorId: response.data.payload.id }});
           }
           else {
-            console.log(response.data.error)
+            console.log(response.data.message)
           }
         });
     },
     logOut: function() {
-      var url = Routing.generate('logOut');
-      axios.get(url)
+      axios.get(FosJsRouting.generate('logOut'))
         .then((response) => {
-          this.loggedInUser = {};
           this.$router.push({ name: 'logIn' });
           /*if(response.data.status === 0) {
             this.$router.push({ name: 'logIn' });
           }
           else {
-            console.log(response.data.error)
+            console.log(response.data.message)
           }*/
         });
     }

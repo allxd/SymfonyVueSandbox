@@ -2,10 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import AuthorsList from '../components/AuthorsList';
 import BooksList from '../components/BooksList';
-import EditAuthorInfo from '../components/EditAuthorInfo';
-import EditBookInfo from '../components/EditBookInfo';
-import CreateAuthor from '../components/CreateAuthor';
-import CreateBook from '../components/CreateBook';
+import BookActionsForm from '../components/BookActionsForm';
+import AuthorActionsForm from '../components/AuthorActionsForm';
 import RegistrationForm from '../components/RegistrationForm';
 import LogInForm from '../components/LogInForm';
 
@@ -17,11 +15,11 @@ export default new VueRouter({
         { path: '/index', name:'index', component: AuthorsList },
         { path: '/signup', name:'signUp', component: RegistrationForm },
         { path: '/signin', name:'logIn', component: LogInForm },
-        { path: '/author/:idA', name:'books', props: true, component: BooksList },
-        { path: '/new', name:'addAuthor', props: true, component: CreateAuthor },
-        { path: '/author/:idA/new', name:'addBook', props: true, component: CreateBook },
-        { path: '/edit/:idA', name:'editAuthor', props: true, component: EditAuthorInfo },
-        { path: '/author/:idA/edit/:idB', name:'editBook', props: true, component: EditBookInfo },
+        { path: '/author/:authorId', name:'books', props: true, component: BooksList },
+        { path: '/new', name:'addAuthor', props: true, component: AuthorActionsForm },
+        { path: '/author/authorId/new', name:'addBook', props: true, component: BookActionsForm },
+        { path: '/edit/:authorId', name:'editAuthor', props: true, component: AuthorActionsForm },
+        { path: '/author/:authorId/edit/:bookId', name:'editBook', props: true, component: BookActionsForm },
         { path: '*', redirect: '/index' }
     ],
 });

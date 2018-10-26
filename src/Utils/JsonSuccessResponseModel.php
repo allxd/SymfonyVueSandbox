@@ -2,10 +2,15 @@
 namespace App\Utils;
 
 class JsonSuccessResponseModel {
-    public function createResponse(string $name='', $data=[]) {
-        $response = (object) [ 
-        	"status"=> 0,
-        	"payload"=> [$name=> $data]];
-        return $response;
+	public $status;
+	public $message;
+	public $payload;
+	public $redirect;
+
+    public function __construct($payload=[], ?string $redirect=null) {
+        	$this->status = 0;
+        	$this->message = '';
+        	$this->payload = $payload;
+        	$this->redirect = $redirect;
     }
 }

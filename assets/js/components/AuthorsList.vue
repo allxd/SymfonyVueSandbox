@@ -17,8 +17,8 @@
           <td> {{ author.firstname }} </td>
           <td> {{ author.secondname }} </td>
           <td>
-            <router-link :to="{ name: 'books', params: { idA: author.id }}" class="btn btn-info mr-3">Список книг</router-link>
-            <router-link :to="{ name: 'editAuthor', params: { idA: author.id }}" class="btn btn-warning mr-3">Редактировать автора</router-link>
+            <router-link :to="{ name: 'books', params: { authorId: author.id }}" class="btn btn-info mr-3">Список книг</router-link>
+            <router-link :to="{ name: 'editAuthor', params: { authorId: author.id }}" class="btn btn-warning mr-3">Редактировать автора</router-link>
           </td>
         </tr>
       </tbody>
@@ -29,6 +29,7 @@
 
 <script>
 import axios from 'axios'
+import FosJsRouting from '../FosJsRouting';
 
 export default {
   name: 'Authors',
@@ -37,15 +38,21 @@ export default {
       authors: []
     }
   },
+  methods: {
+    loadAuthors: function() {
+      axios.get(FosJsRouting.generate('getAllAuthors'))
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.authors = response.data.payload;
+          }
+          else {
+            console.log(response.data.message);
+          }
+        });
+    }
+  },
   async created () {
-    var url = Routing.generate('getAllAuthors');
-    const response = await axios.get(url);
-    if(response.data.status === 0) {
-      this.authors = response.data.payload.authors;
-    }
-    else {
-      console.log(response.data.error);
-    }
+    this.loadAuthors();
   }
 }
 </script>
