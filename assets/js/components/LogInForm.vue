@@ -47,8 +47,13 @@ export default {
     signIn: function() {
       axios.post(FosJsRouting.generate('logIn'), this.formRequest())
       .then((response) => {
-        this.$router.push({ name: 'index'});
-      });
+        if(response.data.status === 0) {
+           this.$router.push({ name: 'index'});
+        }
+        else {
+          console.log(response.data.message)
+        }
+      })
     },
     formRequest: function() {
       var request = {

@@ -1,7 +1,5 @@
 <?php
-
 	namespace App\Service;
-
 	use App\Entity\User;
 	use Doctrine\ORM\EntityManagerInterface;
 	use Doctrine\Common\Persistence\ObjectManager;
@@ -14,29 +12,24 @@
 	use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 	use App\DTO\UserDTO;
 	use App\Security\LoginFormAuthenticator;
-
-	class LoginRegistrationActions {
+	
+	class RegistrationManager {
 		
 		private $objectManager;
 		private $validator;
 		private $passwordEncoder;
-		private $guardHandler;
-		private $security;
 
-		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, Security $security) {
+		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder) {
         	$this->objectManager = $objectManager;
         	$this->validator = $validator;
         	$this->passwordEncoder = $passwordEncoder;
-        	$this->guardHandler = $guardHandler;
-        	$this->security = $security;
         }
-
 		public function createNewUser(Request $request) {
 			$newUserDTO = UserDTO::create($request);
 			$errors = $this->validator->validate($newUserDTO);
 			if(count($errors) === 0) {
 				$user = new User();
-				$user->setEmail($newUserDTO->email);
+				$user->setEmail($newUserDTO->{'email'});
 				$password = $this->passwordEncoder->encodePassword($user, $newUserDTO->password);
 				$user->setPassword($password);
 				$this->objectManager->persist($user);
@@ -44,22 +37,7 @@
         		return;
         	}
         	else {
-        		throw new AppException((string)$errors);
+        		throw new \Exception((string)$errors);
         	}
-		}
-
-		public function signIn() {
-			$user = $this->security->getUser();
-			if($user) {
-				$userDTO = new UserDTO($user);
-				return $userDTO;
-			}
-			else {
-				throw new \Exception('not logged in');
-			}
-		}
-
-		public function logOut() {
-			
 		}
 	}

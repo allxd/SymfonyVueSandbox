@@ -1,24 +1,18 @@
 <?php
 namespace App\Controller;
 
-	use App\Entity\Author;
-	use App\Entity\Book;
-
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\HttpFoundation\JsonResponse;
 	use Symfony\Component\Routing\Annotation\Route;
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-	use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 	use App\Service\DataBaseOperations;
-	use App\Service\LoginRegistrationActions;
 	use App\ExceptionHandler\CustomAppException;
 	use App\Utils\JsonSuccessResponseModel;
 	use App\Utils\JsonErrorResponseModel;
-	use App\ExceptionHandler\CustomCustomAppException;
 
 	class AllController extends Controller {
 
@@ -51,6 +45,7 @@ namespace App\Controller;
 		*/
 		public function getAllAuthorsAction(DataBaseOperations $databaseOperations) {
 			try {
+				//$this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
 				$payload = $databaseOperations->getAllAuthors();
 				$data = new JsonSuccessResponseModel($payload);
 			}
@@ -178,53 +173,5 @@ namespace App\Controller;
     			$data = new JsonErrorResponseModel([], $e->getMessage());
 			}
 			return $this->json($data);
-		}
-
-		/**
-		*@Route("/signup", name="signUp", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
-		public function signUpAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
-			$response = new JsonResponse();
-			try {
-				$loginRegistrationActions->createNewUser($request);
-    			$response->setData($successRes->createResponse());
-			}
-			catch(CustomAppException $e) {
-    			$response->setData($errRes->createResponse($e->getMessage()));
-			}
-			return $response;
-		}
-
-		/**
-		*@Route("/logout", name="logOut", options={"expose" = true})
-		*@Method({"GET"})
-		*/
-		public function logOutAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
-			$response = new JsonResponse();
-			/*try {
-				//$loginRegistrationActions->createNewUser($request);
-    			$response->setData($successRes->createResponse());
-			}
-			catch(\Exception $e) {
-    			$response->setData($errRes->createResponse($e->getMessage()));
-			}*/
-			return $response;
-		}
-
-		/**
-		*@Route("/login", name="logIn", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
-		public function signInAction(LoginRegistrationActions $loginRegistrationActions, JsonSuccessResponseModel $successRes, JsonErrorResponseModel $errRes, Request $request) {
-			$response = new JsonResponse();
-			try {
-				$loginRegistrationActions->signIn();
-    			$response->setData($successRes->createResponse('user', $loginRegistrationActions->signIn()));
-			}
-			catch(CustomAppException $e) {
-    			$response->setData($errRes->createResponse($e->getMessage()));
-			}
-			return $response;
 		}
 	}
