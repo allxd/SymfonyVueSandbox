@@ -88,7 +88,7 @@ export default {
       axios.post(FosJsRouting.generate('editBook', { id: this.bookId }), this.formRequest())
       .then((response) => {
         if(response.data.status === 0) {
-          this.$router.push({ name: 'books', params: { id: this.authorId }});
+          this.$router.push({ name: 'booksList', params: { id: this.authorId }});
         }
         else {
           console.log(response.data.message)
@@ -99,7 +99,7 @@ export default {
       axios.post(FosJsRouting.generate('createBook', { id: this.authorId }), this.formRequest())
       .then((response) => {
         if(response.data.status === 0) {
-          this.$router.push({ name: 'books', params: {authorId: this.authorId }});
+          this.$router.push({ name: 'booksList', params: {authorId: this.authorId }});
         }
         else {
           console.log(response.data.message)

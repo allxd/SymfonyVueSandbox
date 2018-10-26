@@ -34,7 +34,7 @@ export default {
         .then((response) => {
           this.serachOption = '';
           if(response.data.status === 0) {
-            this.$router.push({ name: 'books', params: { authorId: response.data.payload.id }});
+            this.$router.push({ name: 'booksList', params: { authorId: response.data.payload.id }});
           }
           else {
             console.log(response.data.message)

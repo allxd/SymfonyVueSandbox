@@ -15,7 +15,7 @@ export default new VueRouter({
         { path: '/index', name:'index', component: AuthorsList },
         { path: '/signup', name:'signUp', component: RegistrationForm },
         { path: '/signin', name:'logIn', component: LogInForm },
-        { path: '/author/:authorId', name:'books', props: true, component: BooksList },
+        { path: '/author/:authorId', name:'booksList', props: true, component: BooksList },
         { path: '/new', name:'addAuthor', props: true, component: AuthorActionsForm },
         { path: '/author/authorId/new', name:'addBook', props: true, component: BookActionsForm },
         { path: '/edit/:authorId', name:'editAuthor', props: true, component: AuthorActionsForm },

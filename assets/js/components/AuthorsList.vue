@@ -17,7 +17,7 @@
           <td> {{ author.firstname }} </td>
           <td> {{ author.secondname }} </td>
           <td>
-            <router-link :to="{ name: 'books', params: { authorId: author.id }}" class="btn btn-info mr-3">Список книг</router-link>
+            <router-link :to="{ name: 'booksList', params: { authorId: author.id }}" class="btn btn-info mr-3">Список книг</router-link>
             <router-link :to="{ name: 'editAuthor', params: { authorId: author.id }}" class="btn btn-warning mr-3">Редактировать автора</router-link>
           </td>
         </tr>
