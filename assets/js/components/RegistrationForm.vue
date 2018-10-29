@@ -51,7 +51,7 @@ export default {
           this.$router.push({ name: 'index'});
         }
         else {
-          console.log(response.data.error)
+          console.log(response.data.message)
         }
       });
     },

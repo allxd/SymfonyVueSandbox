@@ -23,8 +23,20 @@
         	$this->passwordEncoder = $passwordEncoder;
         	$this->security = $security;
         }
+
+        public function checkEmail(string $email) {
+        	$userRepository = $this->objectManager->getRepository(User::class);
+			$user = $userRepository->findOneBy([
+    			'email' => $email]);
+			return ($user instanceof User);
+        }
+
 		public function createNewUser(Request $request) {
 			$newUserDTO = UserDTO::create($request);
+			if($this->checkEmail($newUserDTO->email)) {
+				throw new CustomAppException('email already exists');
+			}
+
 			$errors = $this->validator->validate($newUserDTO);
 			if(count($errors) === 0) {
 				$user = new User();
