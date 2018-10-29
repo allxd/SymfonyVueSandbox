@@ -50,16 +50,15 @@ class SecurityController extends Controller
 		*@Route("/login", name="logIn", options={"expose" = true})
 		*@Method({"GET", "POST"})
 		*/
-		public function logInAction(Request $request, AuthenticationUtils $authenticationUtils) {
-	        $user = $this->get('security.token_storage')->getToken()->getUser();
-	        if ($user instanceof User) {
-	        	$data = new JsonSuccessResponseModel($user);
-	        }
-	        else {
-	        	$error = $authenticationUtils->getLastAuthenticationError();
-	        	$data = new JsonErrorResponseModel([], $error);
-	        }
-	        return $this->json($data);
+		public function logInAction(Request $request, RegistrationManager $registrationManager) {
+			try {
+				$payload = $registrationManager->getCurrentUser();
+				$data = new JsonSuccessResponseModel($payload);
+			}
+			catch(CustomAppException $e) {
+    			$data = new JsonErrorResponseModel([], $e->getMessage());
+			}
+			return $this->json($data);
 		}
 
 		/**

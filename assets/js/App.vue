@@ -6,7 +6,7 @@
           <a href="/" class="nav-link">На главную</a>
         </li>
       </ul>
-      <input class="form-control mr-sm-2" type="text" placeholder="Фамилия автора..." v-model="serachOption" @keyup.enter="search">
+      <input class="form-control mr-sm-2" type="text" placeholder="Фамилия автора..." v-model="serachOption" @keyup.enter="search" :disabled="!userIsAuthorized">
       <button class="btn btn-secondary mr-3" @click="search">Искать</button>
       <router-link :to="{ name: 'signUp' }" class="btn btn-success mr-1" v-if="!userIsAuthorized">Регистрация</router-link>
       <router-link :to="{ name: 'logIn' }" class="btn btn-success mr-1" v-if="!userIsAuthorized">Вход</router-link>
@@ -54,12 +54,6 @@ export default {
         .then((response) => {
           this.userIsAuthorized = false;
           this.$router.push({ name: 'logIn' });
-          /*if(response.data.status === 0) {
-            this.$router.push({ name: 'logIn' });
-          }
-          else {
-            console.log(response.data.message)
-          }*/
         });
     },
     checkAuthorization: function() {
@@ -69,12 +63,8 @@ export default {
             this.userIsAuthorized = true;
           }
           else {
-            if(response.data.message === 'no current user') {
-              this.userIsAuthorized = false;
-            }
-            else {
-              console.log(response.data.message);
-            }
+            this.userIsAuthorized = false;
+            this.$router.push({ name: 'logIn'});
           }
         });
     }

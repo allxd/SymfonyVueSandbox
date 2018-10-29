@@ -48,7 +48,10 @@ export default {
           else {
             console.log(response.data.message);
           }
-        });
+        })/*.
+        catch((error) => {
+          this.$router.push({ name: 'logIn' });
+        })*/;
     }
   },
   async created () {

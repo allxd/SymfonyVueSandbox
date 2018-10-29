@@ -26,7 +26,6 @@ security:
 
             logout:
                 path: /logout
-
             # activate different ways to authenticate
 
             # http_basic: true
