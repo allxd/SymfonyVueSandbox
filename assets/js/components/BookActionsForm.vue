@@ -92,26 +92,30 @@ export default {
       });
     },
     editBook: function() {
-      axios.post(FosJsRouting.generate('editBook', { id: this.bookId }), this.formRequest())
-      .then((response) => {
-        if(response.data.status === 0) {
-          this.$router.push({ name: 'booksList', params: { id: this.authorId }});
-        }
-        else {
-          console.log(response.data.message)
-        }
-      });
+      if(this.userIsAuthorized) {
+        axios.post(FosJsRouting.generate('editBook', { id: this.bookId }), this.formRequest())
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.$router.push({ name: 'booksList', params: { id: this.authorId }});
+          }
+          else {
+            console.log(response.data.message)
+          }
+        });
+      }
     },
     createBook: function() {
-      axios.post(FosJsRouting.generate('createBook', { id: this.authorId }), this.formRequest())
-      .then((response) => {
-        if(response.data.status === 0) {
-          this.$router.push({ name: 'booksList', params: {authorId: this.authorId }});
-        }
-        else {
-          console.log(response.data.message)
-        }
-      });
+      if(this.userIsAuthorized) {
+        axios.post(FosJsRouting.generate('createBook', { id: this.authorId }), this.formRequest())
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.$router.push({ name: 'booksList', params: {authorId: this.authorId }});
+          }
+          else {
+            console.log(response.data.message)
+          }
+        });
+      }
     },
     formRequest: function() {
       var request = {
