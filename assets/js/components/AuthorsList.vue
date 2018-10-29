@@ -33,9 +33,10 @@ import FosJsRouting from '../FosJsRouting';
 
 export default {
   name: 'Authors',
+  props:['userIsAuthorized'],
   data() {
     return {
-      authors: []
+      authors: [],
     }
   },
   methods: {
@@ -52,10 +53,19 @@ export default {
         catch((error) => {
           this.$router.push({ name: 'logIn' });
         })*/;
+    },
+  },
+  watch: {
+    userIsAuthorized: function () {
+      if(this.userIsAuthorized) {
+       this.loadAuthors();
+      }
     }
   },
-  async created () {
-    this.loadAuthors();
+  created () {
+    if(this.userIsAuthorized) {
+      this.loadAuthors();
+    }
   }
 }
 </script>

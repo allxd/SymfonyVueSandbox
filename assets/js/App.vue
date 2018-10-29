@@ -12,7 +12,7 @@
       <router-link :to="{ name: 'logIn' }" class="btn btn-success mr-1" v-if="!userIsAuthorized">Вход</router-link>
       <button class="btn btn-danger mr-1" @click="logOut" v-if="userIsAuthorized">Выход</button>
     </nav>
-    <router-view :key="$route.fullPath"></router-view>
+    <router-view :key="$route.fullPath" :userIsAuthorized="this.userIsAuthorized"></router-view>
   </div>
 </template>
 
