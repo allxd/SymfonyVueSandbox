@@ -33,11 +33,16 @@ import FosJsRouting from '../FosJsRouting';
 
 export default {
   name: 'Books',
-  props:['authorId'],
+  props:['userIsAuthorized', 'authorId'],
   data() {
     return {
       books: [],
       author: []
+    }
+  },
+  async created () {
+    if(this.userIsAuthorized) {
+      this.loadBooks();
     }
   },
   methods: {
@@ -65,8 +70,12 @@ export default {
         });
     }
   },
-  async created () {
-    this.loadBooks();
+  watch: {
+    userIsAuthorized: function () {
+      if(this.userIsAuthorized) {
+       this.loadBooks();
+      }
+    }
   }
 }
 </script>

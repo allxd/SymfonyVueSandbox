@@ -50,7 +50,7 @@ import { required, minLength, maxLength } from 'vuelidate/lib/validators'
 
 export default {
   name: 'AuthorActionsForm',
-  props:['authorId'],
+  props:['userIsAuthorized', 'authorId'],
   data() {
   	return {
       author: {
@@ -76,50 +76,68 @@ export default {
     }
   },
   async created () {
-  	const response = await axios.get(FosJsRouting.generate('formdataAuthor', { id: this.authorId }));
-    if(response.data.status === 0) {
-      this.formEditAction = true;
-      this.author = response.data.payload;
-      this.dataLoaded = true;
-    }
-    else {
-      if(response.data.message === 'author not found') {
-        this.formEditAction = false;
-        this.dataLoaded = true;
-      }
-      else {
-        console.log(response.data.message);
-      }
+    if(this.userIsAuthorized) {
+      this.loadFormData();
     }
   },
   methods: {
-    editAuthor: function() {
-      axios.post(FosJsRouting.generate('editAuthor', { id: this.authorId }), this.formRequest())
+    loadFormData: function() {
+      axios.get(FosJsRouting.generate('formdataAuthor', { id: this.authorId }))
       .then((response) => {
         if(response.data.status === 0) {
-          this.$router.push({ name: 'index'});
+          this.formEditAction = true;
+          this.author = response.data.payload;
+          this.dataLoaded = true;
         }
         else {
-          console.log(response.data.message)
+          if(response.data.message === 'author not found') {
+            this.formEditAction = false;
+            this.dataLoaded = true;
+          }
+          else {
+            console.log(response.data.message);
+          }
         }
       });
     },
+    editAuthor: function() {
+      if(this.userIsAuthorized) {
+        axios.post(FosJsRouting.generate('editAuthor', { id: this.authorId }), this.formRequest())
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.$router.push({ name: 'index'});
+          }
+          else {
+            console.log(response.data.message)
+          }
+        });
+      }
+    },
     createAuthor: function() {
-      axios.post(FosJsRouting.generate('createAuthor'), this.formRequest())
-      .then((response) => {
-        if(response.data.status === 0) {
-          this.$router.push({ name: 'index'});
-        }
-        else {
-          console.log(response.data.message)
-        }
-      });
+      if(this.userIsAuthorized) {
+        axios.post(FosJsRouting.generate('createAuthor'), this.formRequest())
+        .then((response) => {
+          if(response.data.status === 0) {
+            this.$router.push({ name: 'index'});
+          }
+          else {
+            console.log(response.data.message)
+          }
+        });
+      }
     },
     formRequest: function() {
       var request = {
         "payload": {"author": this.author}}
         return request;
-    },
+    }
+  },
+  watch: {
+    userIsAuthorized: function () {
+      if(this.userIsAuthorized) {
+       this.loadFormData();
+      }
+    }
   }
 }
 </script>

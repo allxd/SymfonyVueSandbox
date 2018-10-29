@@ -39,6 +39,11 @@ export default {
       authors: [],
     }
   },
+  async created () {
+    if(this.userIsAuthorized) {
+      this.loadAuthors();
+    }
+  },
   methods: {
     loadAuthors: function() {
       axios.get(FosJsRouting.generate('getAllAuthors'))
@@ -60,11 +65,6 @@ export default {
       if(this.userIsAuthorized) {
        this.loadAuthors();
       }
-    }
-  },
-  created () {
-    if(this.userIsAuthorized) {
-      this.loadAuthors();
     }
   }
 }

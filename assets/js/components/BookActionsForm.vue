@@ -44,7 +44,7 @@ import { required, integer } from 'vuelidate/lib/validators'
 
 export default {
   name: 'BookActionsForm',
-  props:['authorId', 'bookId'],
+  props:['userIsAuthorized', 'authorId', 'bookId'],
   data() {
     return {
       book: {
@@ -67,23 +67,30 @@ export default {
     }
   },
   async created () {
-    const response = await axios.get(FosJsRouting.generate('formdataBook', { id: this.bookId }));
-    if(response.data.status === 0) {
-      this.formEditAction = true;
-      this.book = response.data.payload;
-      this.dataLoaded = true;
-    }
-    else {
-      if(response.data.message === 'book not found') {
-        this.formEditAction = false;
-        this.dataLoaded = true;
-      }
-      else {
-        console.log(response.data.message);
-      }
+    if(this.userIsAuthorized) {
+      this.loadFormData();
     }
   },
   methods: {
+    loadFormData: function() {
+      axios.get(FosJsRouting.generate('formdataBook', { id: this.bookId }))
+      .then((response) => {
+        if(response.data.status === 0) {
+          this.formEditAction = true;
+          this.book = response.data.payload;
+          this.dataLoaded = true;
+        }
+        else {
+          if(response.data.message === 'book not found') {
+            this.formEditAction = false;
+            this.dataLoaded = true;
+          }
+          else {
+            console.log(response.data.message);
+          }
+        }
+      });
+    },
     editBook: function() {
       axios.post(FosJsRouting.generate('editBook', { id: this.bookId }), this.formRequest())
       .then((response) => {
@@ -110,7 +117,14 @@ export default {
       var request = {
         "payload": {"book": this.book}}
         return request;
-    },
+    }
+  },
+  watch: {
+    userIsAuthorized: function () {
+      if(this.userIsAuthorized) {
+       this.loadFormData();
+      }
+    }
   }
 }
 </script>
