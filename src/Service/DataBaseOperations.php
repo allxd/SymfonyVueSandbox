@@ -8,7 +8,6 @@
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\Validator\Validator\ValidatorInterface;
 	use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-	use Symfony\Component\Config\Definition\Exception\Exception;
 	use App\DTO;
 	use App\ExceptionHandler\CustomAppException;	
 

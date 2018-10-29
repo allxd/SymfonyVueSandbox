@@ -61,4 +61,19 @@ class SecurityController extends Controller
 	        }
 	        return $this->json($data);
 		}
+
+		/**
+		*@Route("/checkauth", name="getCurrentUser", options={"expose" = true})
+		*@Method({"GET", "POST"})
+		*/
+		public function checkAuthAction(RegistrationManager $registrationManager) {
+			try {
+				$payload = $registrationManager->getCurrentUser();
+				$data = new JsonSuccessResponseModel($payload);
+			}
+			catch(CustomAppException $e) {
+    			$data = new JsonErrorResponseModel([], $e->getMessage());
+			}
+			return $this->json($data);
+		}
 }

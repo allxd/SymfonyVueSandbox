@@ -21,6 +21,7 @@
 import axios from 'axios'
 import FosJsRouting from '../FosJsRouting';
 import { required, email } from 'vuelidate/lib/validators'
+import { onLoginCheck } from '../main';
 
 export default {
   name: 'LogInForm',
@@ -48,7 +49,8 @@ export default {
       axios.post(FosJsRouting.generate('logIn'), this.formRequest())
       .then((response) => {
         if(response.data.status === 0) {
-           this.$router.push({ name: 'index'});
+          onLoginCheck.$emit('loggedIn', response.data.payload.user);
+          this.$router.push({ name: 'index'});
         }
         else {
           console.log(response.data.message)

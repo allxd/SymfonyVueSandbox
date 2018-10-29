@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div v-if="dataLoaded">
-      <div v-if="edit">
+      <div v-if="formEditAction">
         <h1>Редактировать книгу</h1>
         <div class="form-group">
           <label class="col-form-label" for="name">Название</label>
@@ -52,7 +52,7 @@ export default {
         year: ''
       },
       dataLoaded: false,
-      edit: false
+      formEditAction: false
     }
   }, 
   validations: {
@@ -69,13 +69,13 @@ export default {
   async created () {
     const response = await axios.get(FosJsRouting.generate('formdataBook', { id: this.bookId }));
     if(response.data.status === 0) {
-      this.edit = true;
+      this.formEditAction = true;
       this.book = response.data.payload;
       this.dataLoaded = true;
     }
     else {
       if(response.data.message === 'book not found') {
-        this.edit = false;
+        this.formEditAction = false;
         this.dataLoaded = true;
       }
       else {

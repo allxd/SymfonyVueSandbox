@@ -3,6 +3,7 @@ import App from './App';
 import router from './router/router';
 import Vuelidate from 'vuelidate'
 
+export const onLoginCheck = new Vue();
 
 Vue.use(Vuelidate)
 
