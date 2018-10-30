@@ -20,13 +20,18 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Service\RegistrationManager;
 
-
+/**
+ * Class SecurityController
+ */
 class SecurityController extends Controller
 {
 		/**
-		*@Route("/signup", name="signUp", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
+		 * @Route("/signup", name="signUp", options={"expose" = true})
+		 * @Method({"POST"})
+		 * @param RegistrationManager $registrationManager
+		 * @param Request $request
+		 * @return Response
+		 */
 		public function signUpAction(RegistrationManager $registrationManager, Request $request) {
 			try {
 				$payload = $registrationManager->createNewUser($request);
@@ -39,18 +44,21 @@ class SecurityController extends Controller
 		}
 
 		/**
-		*@Route("/logout", name="logOut", options={"expose" = true})
-		*@Method({"GET"})
-		*/
-		public function logOutAction(Request $request) {
+		 * @Route("/logout", name="logOut", options={"expose" = true})
+		 * @Method({"GET"})
+		 */
+		public function logOutAction() {
 			return $this->json('data');
 		}
 
 		/**
-		*@Route("/login", name="logIn", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
-		public function logInAction(Request $request, RegistrationManager $registrationManager) {
+		 * @Route("/login", name="logIn", options={"expose" = true})
+		 * @Method({"POST"})
+		 * @param RegistrationManager $registrationManager
+		 * @param Request $request
+		 * @return Response
+		 */
+		public function logInAction(RegistrationManager $registrationManager, Request $request) {
 			try {
 				$payload = $registrationManager->getCurrentUser();
 				$data = new JsonSuccessResponseModel($payload);
@@ -62,9 +70,11 @@ class SecurityController extends Controller
 		}
 
 		/**
-		*@Route("/checkauth", name="getCurrentUser", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
+		 * @Route("/checkauth", name="getCurrentUser", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param RegistrationManager $registrationManager
+		 * @return Response
+	 	 */
 		public function checkAuthAction(RegistrationManager $registrationManager) {
 			try {
 				$payload = $registrationManager->getCurrentUser();

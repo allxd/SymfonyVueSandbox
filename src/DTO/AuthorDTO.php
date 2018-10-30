@@ -7,29 +7,43 @@
 	
 	class AuthorDTO {
 		
+		/**
+     	 * @var string
+		 */
 		public $id;
+		
 		/**
-     	* @Assert\NotBlank()
-     	* @Assert\Length(
-     	* 	min = 2,
-     	*   max = 20,
-     	*   minMessage = "first name must be at least {{ limit }} characters long",
-     	*   maxMessage = "first name cannot be longer than {{ limit }} characters"
-     	* )
-     	*/
+     	 * @Assert\NotBlank()
+     	 * @Assert\Length(
+     	 * 	min = 2,
+     	 *  max = 20,
+     	 *  minMessage = "first name must be at least {{ limit }} characters long",
+     	 *  maxMessage = "first name cannot be longer than {{ limit }} characters"
+     	 * )
+     	 * @var string
+     	 */
 		public $firstname;
+
 		/**
-     	* @Assert\NotBlank()
-     	* @Assert\Length(
-     	* 	min = 2,
-     	*   max = 20,
-     	*   minMessage = "second name must be at least {{ limit }} characters long",
-     	*   maxMessage = "second name cannot be longer than {{ limit }} characters"
-     	* )
-     	*/
+      	 * @Assert\NotBlank()
+     	 * @Assert\Length(
+     	 * 	min = 2,
+     	 *  max = 20,
+     	 *  minMessage = "second name must be at least {{ limit }} characters long",
+     	 *  maxMessage = "second name cannot be longer than {{ limit }} characters"
+     	 * )
+     	 * @var string
+     	 */
 		public $secondname;
+
+		/**
+     	 * @var Books[]
+		 */
 		public $books;
 
+		/**
+		 * @param Author|null $author
+		 */
 		public function __construct(Author $author=null) {
 			if($author) {
 	        	$this->id = $author->getId();
@@ -48,6 +62,11 @@
 	        }
         }
 
+		/**
+		 * @param Request $request
+		 * @param string $key
+		 * @return AuthorDTO
+		 */
         public static function create(Request $request, string $key = "payload") {
         	$content = $request->getContent();
         	$params = json_decode($content, true);

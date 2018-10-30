@@ -17,6 +17,12 @@
 		private $passwordEncoder;
 		private $security;
 
+		/**
+		 * @param ObjectManager $objectManager
+		 * @param ValidatorInterface $validator
+		 * @param UserPasswordEncoderInterface $passwordEncoder
+		 * @param Security $security
+		 */
 		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder, Security $security) {
         	$this->objectManager = $objectManager;
         	$this->validator = $validator;
@@ -24,6 +30,10 @@
         	$this->security = $security;
         }
 
+		/**
+		 * @param string $email
+		 * @return bool
+		 */
         public function checkEmail(string $email) {
         	$userRepository = $this->objectManager->getRepository(User::class);
 			$user = $userRepository->findOneBy([
@@ -31,6 +41,10 @@
 			return ($user instanceof User);
         }
 
+		/**
+		 * @param Request $request
+		 * @throws CustomAppException
+		 */
 		public function createNewUser(Request $request) {
 			$newUserDTO = UserDTO::create($request);
 			if($this->checkEmail($newUserDTO->email)) {
@@ -52,6 +66,10 @@
         	}
 		}
 
+		/**
+		 * @return UserDTO
+		 * @throws CustomAppException
+		 */
 		public function getCurrentUser() {
 			$user = $this->security->getUser();
 			if($user) {

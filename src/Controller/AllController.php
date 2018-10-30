@@ -14,20 +14,27 @@ namespace App\Controller;
 	use App\Utils\JsonSuccessResponseModel;
 	use App\Utils\JsonErrorResponseModel;
 
+	/**
+ 	 * Class SecurityController
+ 	 */
 	class AllController extends Controller {
 
 		/**
-		*@Route("/", name="home")
-		*@Method({"GET"})
-		*/
+		 * @Route("/", name="home")
+		 * @Method({"GET"})
+		 * @return Response
+		 */
 		public function index() {
 			return $this->render('base.html.twig');
 		}
 
 		/**
-		*@Route("/search", name="search", options={"expose" = true})
-		*@Method({"GET", "POST"})
-		*/
+		 * @Route("/search", name="search", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param Request $request
+		 * @return Response
+		 */
 		public function searchByAuthorNameAction(DataBaseOperations $databaseOperations, Request $request) {
 			try {
 				$payload = $databaseOperations->searchByAuthorName($request);
@@ -40,9 +47,11 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
-		*@Method({"GET"})
-		*/
+		 * @Route("/api/authorslist", name="getAllAuthors", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @return Response
+		 */
 		public function getAllAuthorsAction(DataBaseOperations $databaseOperations) {
 			try {
 				$payload = $databaseOperations->getAllAuthors();
@@ -55,9 +64,12 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/addauthor", name="createAuthor", options={"expose" = true})
-		*Method({"GET", "POST"})
-		*/
+		 * @Route("/api/addauthor", name="createAuthor", options={"expose" = true})
+		 * @Method({"POST"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param Request $request
+		 * @return Response
+		 */
 		public function createAuthorAction(DataBaseOperations $databaseOperations, Request $request) {
 			try {
 				$payload = $databaseOperations->createNewAuthor($request);
@@ -70,9 +82,13 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/{id}/addbook", name="createBook", options={"expose" = true})
-		*Method({"GET", "POST"})
-		*/
+		 * @Route("/api/author/{id}/addbook", name="createBook", options={"expose" = true})
+		 * @Method({"POST"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param Request $request
+		 * @param string $id
+		 * @return Response
+		 */
 		public function createBookaction(DataBaseOperations $databaseOperations, Request $request, $id) {
 			try {
 				$payload = $databaseOperations->createNewBook($request, $id);
@@ -85,9 +101,13 @@ namespace App\Controller;
 		}
 
 		/**
-     	* @Route("/api/author/edit/{id}", name="editAuthor", options={"expose" = true})
-     	* Method({"GET", "POST"})
-     	*/
+     	 * @Route("/api/author/edit/{id}", name="editAuthor", options={"expose" = true})
+     	 * @Method({"POST"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param Request $request
+		 * @param string $id
+		 * @return Response
+     	 */
     	public function editAuthorAction(DataBaseOperations $databaseOperations, Request $request, $id) {
 			try {
 				$payload = $databaseOperations->editAuthor($request, $id);
@@ -100,9 +120,13 @@ namespace App\Controller;
     	}
 
     	/**
-     	* @Route("/api/book/edit/{id}", name="editBook", options={"expose" = true})
-     	* Method({"GET", "POST"})
-     	*/
+     	 * @Route("/api/book/edit/{id}", name="editBook", options={"expose" = true})
+     	 * @Method({"POST"})
+     	 * @param DataBaseOperations $databaseOperations
+		 * @param Request $request
+		 * @param string $id
+		 * @return Response
+     	 */
     	public function editBookAction(DataBaseOperations $databaseOperations, Request $request, $id) {
 			try {
 				$payload = $databaseOperations->editBook($request, $id);
@@ -116,9 +140,12 @@ namespace App\Controller;
 
 
 		/**
-	    * @Route("/api/book/delete/{id}", name="deleteBook", options={"expose" = true})
-	    * @Method({"DELETE"})
-	    */
+	     * @Route("/api/book/delete/{id}", name="deleteBook", options={"expose" = true})
+	     * @Method({"DELETE"})
+	     * @param DataBaseOperations $databaseOperations
+		 * @param string $id
+		 * @return Request
+	     */
 	    public function deleteBookAction(DataBaseOperations $databaseOperations, $id) {
 			try {
 				$payload = $databaseOperations->deleteBook($id);
@@ -131,9 +158,12 @@ namespace App\Controller;
 	    }
 
 		/**
-		*@Route("/api/book/formdata/{id}", name="formdataBook", options={"expose" = true})
-		*@Method({"GET"})
-		*/
+		 * @Route("/api/book/formdata/{id}", name="formdataBook", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param string $id
+		 * @return Request
+		 */
 		public function getBookFormdataAction(DataBaseOperations $databaseOperations, $id) {
 			try {
 				$payload = $databaseOperations->getBookFormData($id);
@@ -146,9 +176,12 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/formdata/{id}", name="formdataAuthor", options={"expose" = true})
-		*@Method({"GET"})
-		*/
+		 * @Route("/api/author/formdata/{id}", name="formdataAuthor", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param string $id
+		 * @return Request
+		 */
 		public function getAuthorFormdataAction(DataBaseOperations $databaseOperations, $id) {
 			try {
 				$payload = $databaseOperations->getAuthorFormData($id);
@@ -161,8 +194,12 @@ namespace App\Controller;
 		}
 
 		/**
-		*@Route("/api/author/{id}/books", name="booksList", options={"expose" = true})
-		*/
+		 * @Route("/api/author/{id}/books", name="booksList", options={"expose" = true})
+		 * @Method({"GET"})
+		 * @param DataBaseOperations $databaseOperations
+		 * @param string $id
+		 * @return Request
+		 */
 		public function getBooksByAuthorAction(DataBaseOperations $databaseOperations, $id) {
 			try {
 				$payload = $databaseOperations->getBooksByAuthor($id);

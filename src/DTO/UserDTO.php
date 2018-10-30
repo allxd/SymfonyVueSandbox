@@ -7,20 +7,34 @@
 	
 	class UserDTO {
 		
+		/**
+     	 * @var string
+		 */
 		public $id;
+
 		/**
-     	* @Assert\NotBlank()
-     	* @Assert\Email(
-     	* 	message = "The email '{{ value }}' is not a valid email.",
-     	* )
-     	*/
+     	 * @Assert\NotBlank()
+     	 * @Assert\Email(
+     	 * 	message = "The email '{{ value }}' is not a valid email.",
+     	 * )
+     	 * @var string
+      	 */
 		public $email;
+		
 		/**
-     	* @Assert\NotBlank()
-     	*/
+     	 * @Assert\NotBlank()
+     	 * @var string
+     	 */
 		public $password;
+		
+		/**
+     	 * @var array
+		 */
 		public $roles;
 
+		/**
+		 * @param User|null $user
+		 */
 		public function __construct(User $user=null) {
 			if($user) {
 	        	$this->id = $user->getId();
@@ -39,6 +53,11 @@
 	        }
         }
 
+		/**
+		 * @param Request $request
+		 * @param string $key
+		 * @return UserDTO
+		 */
         public static function create(Request $request, string $key = "payload") {
         	$content = $request->getContent();
         	$params = json_decode($content, true);

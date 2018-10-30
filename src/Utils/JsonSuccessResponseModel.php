@@ -7,6 +7,10 @@ class JsonSuccessResponseModel {
 	public $payload;
 	public $redirect;
 
+    /**
+     * @param array|[] $payload
+     * @param string|null $redirect
+     */
     public function __construct($payload=[], ?string $redirect=null) {
         	$this->status = 0;
         	$this->message = '';

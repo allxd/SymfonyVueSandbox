@@ -14,16 +14,19 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @var string
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @var string
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @var array
      */
     private $roles = [];
 
@@ -33,16 +36,26 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @return string
+     */
     public function getId(): ?string
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return User
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -54,6 +67,7 @@ class User implements UserInterface
      * A visual identifier that represents this user.
      *
      * @see UserInterface
+     * @return string
      */
     public function getUsername(): string
     {
@@ -62,6 +76,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return array
      */
     public function getRoles(): array
     {
@@ -72,6 +87,10 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     * @return User
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -81,12 +100,17 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return string
      */
     public function getPassword(): string
     {
         return (string) $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return User
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -96,6 +120,7 @@ class User implements UserInterface
 
     /**
      * @see UserInterface
+     * @return int
      */
     public function getSalt()
     {

@@ -16,11 +16,20 @@
 		private $objectManager;
 		private $validator;
 
+		/**
+		 * @param ObjectManager $objectManager
+		 * @param ValidatorInterface $validator
+		 */
 		public function __construct(ObjectManager $objectManager, ValidatorInterface $validator) {
         	$this->objectManager = $objectManager;
         	$this->validator = $validator;
         }
 
+		/**
+		 * @param string $firstname
+		 * @param string $secondname
+		 * @return bool
+		 */
         public function checkIfAuthorAlreadyExists(string $firstname, string $secondname) {
         	$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
 			$author = $authorRepository->findOneBy([
@@ -29,16 +38,25 @@
 			return ($author instanceof Entity\Author);
         }
 
+
+		/**
+		 * @return AuthorDTO[]
+		 */
 		public function getAllAuthors() {
 			$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
-			$authors = $authorRepository->findAll();
-			$authorsArr = array();
-			foreach ($authors as $author) {
-				$authorsArr[] = new DTO\AuthorDTO($author);
+			$allAuthors = $authorRepository->findAll();
+			$authors = array();
+			foreach ($allAuthors as $author) {
+				$authors[] = new DTO\AuthorDTO($author);
 			}
-			return $authorsArr;
+			return $authors;
 		}
 
+		/**
+		 * @param string $id
+		 * @return AuthorDTO
+		 * @throws CustomAppException
+		 */
 		public function getBooksByAuthor(string $id) {
 			$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
 			$author = $authorRepository->find($id);
@@ -51,6 +69,10 @@
 
 		}
 
+		/**
+		 * @param Request $request
+		 * @throws CustomAppException
+		 */
 		public function createNewAuthor(Request $request) {
 			$newAuthorDTO = DTO\AuthorDTO::create($request);
 			$errors = $this->validator->validate($newAuthorDTO);
@@ -72,6 +94,11 @@
         	}
 		}
 
+		/**
+		 * @param Request $request
+		 * @param string $id
+		 * @throws CustomAppException
+		 */
 		public function createNewBook(Request $request, string $id) {
 			$newBookDTO = DTO\BookDTO::create($request);
 			$errors = $this->validator->validate($newBookDTO);
@@ -96,6 +123,11 @@
 			}
 		}
 
+		/**
+		 * @param string $id
+		 * @return AuthorDTO
+		 * @throws CustomAppException
+		 */
 		public function getAuthorFormData(string $id) {
 			$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
 			$author = $authorRepository->find($id);
@@ -107,6 +139,11 @@
 			}
 		}
 
+		/**
+		 * @param string $id
+		 * @return BookDTO
+		 * @throws CustomAppException
+		 */
 		public function getBookFormData(string $id) {
 			$bookRepository = $this->objectManager->getRepository(Entity\Book::class);
 			$book = $bookRepository->find($id);
@@ -118,7 +155,12 @@
 			}
 		}
 
-		public function editAuthor(Request $request, $id) {
+		/**
+		 * @param Request $request
+		 * @param string $id
+		 * @throws CustomAppException
+		 */
+		public function editAuthor(Request $request, string $id) {
 			$infoAuthorDTO = DTO\AuthorDTO::create($request);
 			$errors = $this->validator->validate($infoAuthorDTO);
 			if(count($errors) === 0) {
@@ -139,7 +181,12 @@
 			}
 		}
 		
-		public function editBook(Request $request, $id) {
+		/**
+		 * @param Request $request
+		 * @param string $id
+		 * @throws CustomAppException
+		 */
+		public function editBook(Request $request, string $id) {
 			$infoBookDTO = DTO\BookDTO::create($request);
 			$errors = $this->validator->validate($infoBookDTO);
 			if(count($errors) === 0) {
@@ -160,7 +207,11 @@
 			}
 		}
 
-		public function deleteBook($id) {
+		/**
+		 * @param string $id
+		 * @throws CustomAppException
+		 */
+		public function deleteBook(string $id) {
 			$bookRepository = $this->objectManager->getRepository(Entity\Book::class);
 			$book = $bookRepository->find($id);
 			if($book) {
@@ -173,6 +224,10 @@
 			}
 		}
 
+		/**
+		 * @param Request $request
+		 * @throws CustomAppException
+		 */
 		public function searchByAuthorName(Request $request) {
 			$searchParams = $request->query->get('secondname');
 			$authorRepository = $this->objectManager->getRepository(Entity\Author::class);

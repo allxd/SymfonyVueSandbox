@@ -6,16 +6,27 @@
 	use Symfony\Component\Validator\Constraints as Assert;
 
 	class BookDTO {
+
+		/**
+     	 * @var string
+		 */
 		public $id;
+
 		/**
-     	* @Assert\NotBlank()
-     	*/
+     	 * @Assert\NotBlank()
+     	 * @var string
+      	 */
 		public $name;
+		
 		/**
-     	* @Assert\NotBlank()
-     	*/
+     	 * @Assert\NotBlank()
+     	 * @var int
+     	 */
 		public $year;
 
+		/**
+		 * @param Book|null $book
+		 */
 		public function __construct(Book $book=null) {
 			if($book) {
 	        	$this->id = $book->getId();
@@ -29,6 +40,11 @@
 	        }
         }
 
+		/**
+		 * @param Request $request
+		 * @param string $key
+		 * @return BookDTO
+		 */
         public static function create(Request $request, string $key = "payload") {
         	$content = $request->getContent();
         	$params = json_decode($content, true);

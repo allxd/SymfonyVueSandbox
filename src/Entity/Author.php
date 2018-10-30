@@ -15,39 +15,56 @@ class Author
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @var string
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @var string
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @var string
      */
     private $secondname;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Book", mappedBy="author", orphanRemoval=true)
+     * @var array
      */
     private $books;
 
+    /**
+     * @return Books[]
+     */
     public function __construct()
     {
         $this->books = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
     public function getId(): ?string
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
+    /**
+     * @param string $firstname
+     * @return Author
+     */
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
@@ -55,11 +72,18 @@ class Author
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSecondname(): ?string
     {
         return $this->secondname;
     }
 
+    /**
+     * @param string $secondname
+     * @return Author
+     */
     public function setSecondname(string $secondname): self
     {
         $this->secondname = $secondname;
@@ -75,6 +99,10 @@ class Author
         return $this->books;
     }
 
+    /**
+     * @param Book $book
+     * @return Author
+     */
     public function addBook(Book $book): self
     {
         if (!$this->books->contains($book)) {
@@ -85,6 +113,10 @@ class Author
         return $this;
     }
 
+    /**
+     * @param Book $book
+     * @return Author
+     */
     public function removeBook(Book $book): self
     {
         if ($this->books->contains($book)) {
