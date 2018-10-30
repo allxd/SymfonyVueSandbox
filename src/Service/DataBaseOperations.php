@@ -21,6 +21,14 @@
         	$this->validator = $validator;
         }
 
+        public function checkIfAuthorAlreadyExists(string $firstname, string $secondname) {
+        	$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
+			$author = $authorRepository->findOneBy([
+    			'firstname' => $firstname,
+    			'secondname' => $secondname]);
+			return ($author instanceof Entity\Author);
+        }
+
 		public function getAllAuthors() {
 			$authorRepository = $this->objectManager->getRepository(Entity\Author::class);
 			$authors = $authorRepository->findAll();
@@ -47,12 +55,17 @@
 			$newAuthorDTO = DTO\AuthorDTO::create($request);
 			$errors = $this->validator->validate($newAuthorDTO);
 			if(count($errors) === 0) {
-				$author = new Entity\Author();
-				$author->setFirstname($newAuthorDTO->firstname);
-				$author->setSecondname($newAuthorDTO->secondname);
-				$this->objectManager->persist($author);
-        		$this->objectManager->flush();
-        		return;
+				if($this->checkIfAuthorAlreadyExists($newAuthorDTO->firstname, $newAuthorDTO->secondname)) {
+					throw new CustomAppException('author already exists');
+				}
+				else {
+					$author = new Entity\Author();
+					$author->setFirstname($newAuthorDTO->firstname);
+					$author->setSecondname($newAuthorDTO->secondname);
+					$this->objectManager->persist($author);
+	        		$this->objectManager->flush();
+	        		return;
+	        	}
         	}
         	else {
         		throw new CustomAppException((string)$errors);
