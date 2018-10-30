@@ -13,7 +13,7 @@
       <div class="error" v-if="!$v.user.password.required">Необходимо заполнить</div>
     </div>
     <hr>
-    <button class="btn btn-success" @click="signIn" :disabled="$v.$invalid">Вход</button>
+    <button class="btn btn-success" @click="signIn" :disabled="$v.$invalid">Войти</button>
   </div>
 </template>
 
