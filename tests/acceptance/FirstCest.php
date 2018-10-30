@@ -19,9 +19,7 @@ class FirstCest
        	$I->see('Пароль');
        	$I->fillField('password', '123');
        	$I->click('Войти');
-
-       	usleep(250000);
-
+       	$I->waitForText('Список авторов', 1);
        	$I->dontSeeLink('Вход');
        	$I->dontSeeInCurrentUrl('/signin');
     }
@@ -40,24 +38,16 @@ class FirstCest
        	$I->amOnUrl('http://127.0.0.1:8000/#/index');
        	$I->see('Выход');
        	$I->click('Выход');
-
-       	usleep(250000);
-
+       	$I->waitForText('Вход', 1);
        	$I->see('Вход');
        	$I->click('Вход');
        	$I->fillField('email', '123@123.com');
        	$I->fillField('password', '123');
        	$I->click('Войти');
-
-       	usleep(250000);
-
-       	$I->see('Список авторов');
+       	$I->waitForText('Список авторов', 1);
        	$I->click('Добавить автора');
        	$I->seeInCurrentUrl('/new');
-
-       	usleep(250000);
-
-       	$I->see('Добавить нового автора');
+       	$I->waitForText('Добавить нового автора', 1);
        	$I->see('Имя');
        	$I->see('Фамилия');
     }
@@ -66,10 +56,7 @@ class FirstCest
        	$I->amOnUrl('http://127.0.0.1:8000/#/index');
        	$I->see('Выход');
        	$I->click('Выход');
-
-       	usleep(250000);
-
-       	$I->see('Вход');
+       	$I->waitForText('Вход', 1);
        	$I->see('Регистрация');
     }
 
